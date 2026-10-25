@@ -20,8 +20,13 @@
 
     <!-- Desktop Auth Actions -->
     <div class="header-actions">
-      <a href="{{ url_for('pages.auth') }}" class="btn btn-ghost btn-sm">Login</a>
-      <a href="{{ url_for('pages.auth') }}" class="btn btn-secondary btn-sm">Sign up</a>
+      {% if current_user.is_authenticated %}
+        <span class="caption" style="font-weight: 600; color: var(--text); padding-right: 0.25rem;">{{ current_user.name.split()[0] }}</span>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-ghost btn-sm">Log out</a>
+      {% else %}
+        <a href="{{ url_for('pages.auth') }}" class="btn btn-ghost btn-sm">Login</a>
+        <a href="{{ url_for('pages.auth', tab='register') }}" class="btn btn-secondary btn-sm">Sign up</a>
+      {% endif %}
     </div>
 
     <!-- Mobile Hamburger Toggle -->
@@ -57,7 +62,12 @@
     <a href="{{ url_for('pages.about') }}" class="mobile-nav-link {% if request.path.startswith('/about') %}active{% endif %}">About</a>
     <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
       <a href="{{ url_for('pages.analyze') }}" class="btn btn-primary" style="width: 100%;">Analyze a Job</a>
-      <a href="{{ url_for('pages.auth') }}" class="btn btn-secondary" style="width: 100%;">Login / Sign up</a>
+      {% if current_user.is_authenticated %}
+        <div class="caption text-muted" style="text-align: center;">Signed in as <strong>{{ current_user.name }}</strong></div>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary" style="width: 100%;">Log out</a>
+      {% else %}
+        <a href="{{ url_for('pages.auth') }}" class="btn btn-secondary" style="width: 100%;">Login / Sign up</a>
+      {% endif %}
     </div>
   </nav>
 </div>

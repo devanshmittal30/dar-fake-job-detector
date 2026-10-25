@@ -9,9 +9,10 @@ Implements endpoints specified in docs/03_TECHNICAL_DESIGN.md (section 7 & 9):
 from flask import Blueprint, jsonify, request
 
 from app.fetcher import FetchError, safe_fetch_job_text
+from app.matcher import find_matching_ad, index_ad
+from app.models import Ad, db
 from app.ocr import OCRError, extract_text_from_image
 from app.predictor import predict
-from app.temp_store import TEMPORARY_RESULTS
 
 bp_api = Blueprint("api", __name__, url_prefix="/api")
 
@@ -52,17 +53,45 @@ def analyze_job():
         model_key = "lr"
 
     try:
+        # 1. Check for existing exact or near-duplicate ad
+        matched_ad_id = find_matching_ad(text_str)
+
+        # 2. Compute AI prediction & explanations
         result = predict(text_str, model_key=model_key)
         result["raw_text"] = text_str
         result["model_key"] = model_key
         result["word_count"] = len(words)
         result["source"] = data.get("source", "text")
 
-        # TEMPORARY: Store result in memory until database is implemented in P12
-        TEMPORARY_RESULTS[result["ad_id"]] = result
+        # 3. Save or update in database (docs/03_TECHNICAL_DESIGN.md section 8)
+        if matched_ad_id:
+            existing_ad = db.session.get(Ad, matched_ad_id)
+            if existing_ad:
+                existing_ad.check_count += 1
+                result["ad_id"] = existing_ad.ad_id
+                result["check_count"] = existing_ad.check_count
+                db.session.commit()
+            else:
+                matched_ad_id = None
+
+        if not matched_ad_id:
+            new_ad = Ad(
+                ad_id=result["ad_id"],
+                snippet=text_str[:200],
+                full_text=text_str,
+                ai_label=result["verdict"],
+                ai_probability=result["probability"],
+                model_used=model_key,
+                check_count=1
+            )
+            db.session.add(new_ad)
+            db.session.commit()
+            index_ad(new_ad.ad_id, new_ad.full_text)
+            result["check_count"] = 1
 
         return jsonify(result), 200
     except Exception as e:
+        db.session.rollback()
         return jsonify({"error": f"Analysis failed: {str(e)}"}), 500
 
 

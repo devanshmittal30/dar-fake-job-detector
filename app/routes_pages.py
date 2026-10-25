@@ -6,9 +6,9 @@ Serves all 10 user-facing HTML views following:
 - docs/02_UI_UX_SPEC.md (section 3)
 """
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
+from app.models import Ad, db
 from app.predictor import predict
-from app.temp_store import TEMPORARY_RESULTS, get_demo_ad_result
 
 bp_pages = Blueprint("pages", __name__)
 
@@ -29,27 +29,44 @@ def analyze():
 def result(ad_id: str):
     """Result page displaying verdict, probability gauge, explainability, and voting.
 
-    Follows docs/02_UI_UX_SPEC.md (section 8) and roadmap prompt P11.
+    Follows docs/02_UI_UX_SPEC.md (section 8) and roadmap prompt P11 & P12.
     """
     model_override = request.args.get("model")
-    # TEMPORARY: Lookup in-memory dictionary until P12 database
-    res = TEMPORARY_RESULTS.get(ad_id)
+    ad = db.session.get(Ad, ad_id)
 
-    if not res:
-        res = get_demo_ad_result(ad_id)
+    # For standalone testing / demo visits, auto-seed demo Ad if requested
+    if not ad and (ad_id.startswith("demo_") or ad_id.startswith("test_")):
+        demo_text = (
+            "URGENT HIRING: Data Entry Operator needed immediately. Work from home and earn 45,000 rupees "
+            "weekly with flexible hours. Instant joining without any interview needed. Selected candidates "
+            "must pay a refundable registration fee of 1500 rupees for training kit and verification before start. "
+            "Contact our HR manager strictly on WhatsApp at 9876543210 or join our Telegram channel t.me/fastjobs today. "
+            "Please send your Aadhaar card and PAN card copies to confirm your seat immediately. Limited vacancies available!"
+        )
+        ad = Ad(
+            ad_id=ad_id,
+            snippet=demo_text[:200],
+            full_text=demo_text,
+            ai_label="Likely Fake",
+            ai_probability=0.94,
+            model_used="lr",
+            check_count=1
+        )
+        db.session.add(ad)
+        db.session.commit()
 
-    # Allow model switching on the result page ("See the other model's result")
-    if model_override in ("lr", "rf") and res.get("raw_text"):
-        updated_res = predict(res["raw_text"], model_key=model_override)
-        updated_res["raw_text"] = res["raw_text"]
-        updated_res["model_key"] = model_override
-        updated_res["word_count"] = res.get("word_count", len(res["raw_text"].split()))
-        updated_res["source"] = res.get("source", "text")
-        TEMPORARY_RESULTS[ad_id] = updated_res
-        res = updated_res
+    if not ad:
+        flash("Job posting not found. Please paste an ad to analyze.", "info")
+        return redirect(url_for("pages.analyze"))
 
-    current_model = res.get("model_key", "lr")
-    other_model_key = "rf" if current_model == "lr" else "lr"
+    model_to_use = model_override if model_override in ("lr", "rf") else ad.model_used
+    res = predict(ad.full_text, model_key=model_to_use)
+    res["ad_id"] = ad.ad_id
+    res["raw_text"] = ad.full_text
+    res["model_key"] = model_to_use
+    res["check_count"] = ad.check_count
+
+    other_model_key = "rf" if model_to_use == "lr" else "lr"
     other_model_name = "Random Forest" if other_model_key == "rf" else "Logistic Regression"
 
     return render_template(
