@@ -11,6 +11,7 @@ from flask import Blueprint, jsonify, request
 from app.fetcher import FetchError, safe_fetch_job_text
 from app.ocr import OCRError, extract_text_from_image
 from app.predictor import predict
+from app.temp_store import TEMPORARY_RESULTS
 
 bp_api = Blueprint("api", __name__, url_prefix="/api")
 
@@ -52,8 +53,14 @@ def analyze_job():
 
     try:
         result = predict(text_str, model_key=model_key)
+        result["raw_text"] = text_str
+        result["model_key"] = model_key
         result["word_count"] = len(words)
         result["source"] = data.get("source", "text")
+
+        # TEMPORARY: Store result in memory until database is implemented in P12
+        TEMPORARY_RESULTS[result["ad_id"]] = result
+
         return jsonify(result), 200
     except Exception as e:
         return jsonify({"error": f"Analysis failed: {str(e)}"}), 500
