@@ -1,4 +1,21 @@
-<!-- faq.html — FAQ page. To be implemented in P15. -->
-{% extends "base.html" %}
-{% block title %}FAQ | DAR{% endblock %}
-{% block content %}<p>FAQ page placeholder.</p>{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Frequently Asked Questions | DAR{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width: 860px;">
+    <div style="margin-bottom: 2rem;">
+      <h1 style="margin-bottom: 0.5rem;">Frequently Asked Questions</h1>
+      <p class="text-muted">Everything you need to know about how DAR detects fake jobs.</p>
+    </div>
+
+    <div class="card" style="min-height: 200px; display: flex; align-items: center; justify-content: center; text-align: center;">
+      <div>
+        <p class="text-muted" style="font-weight: 600; margin-bottom: 0.5rem;">Interactive FAQ Accordion</p>
+        <p class="caption">Keyboard-accessible FAQ accordion will be activated in P15.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

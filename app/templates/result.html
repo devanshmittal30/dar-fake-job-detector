@@ -1,4 +1,21 @@
-<!-- result.html — Result page. To be implemented in P11. -->
-{% extends "base.html" %}
-{% block title %}Result | DAR{% endblock %}
-{% block content %}<p>Result page placeholder.</p>{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Analysis Result | DAR{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width: 860px;">
+    <div style="margin-bottom: 2rem;">
+      <h1 style="margin-bottom: 0.5rem;">Analysis Result</h1>
+      <p class="text-muted">Ad Reference: <code>{{ ad_id }}</code></p>
+    </div>
+
+    <div class="card" style="min-height: 200px; display: flex; align-items: center; justify-content: center; text-align: center;">
+      <div>
+        <p class="text-muted" style="font-weight: 600; margin-bottom: 0.5rem;">Verdict & Explainability block</p>
+        <p class="caption">Full result display, gauge, and highlight view will be activated in P11.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

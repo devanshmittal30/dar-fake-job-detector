@@ -1,4 +1,21 @@
-<!-- performance.html — Model Performance page. To be implemented in P15. -->
-{% extends "base.html" %}
-{% block title %}Model Performance | DAR{% endblock %}
-{% block content %}<p>Model Performance page placeholder.</p>{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Model Performance & Metrics | DAR{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div style="margin-bottom: 2rem;">
+      <h1 style="margin-bottom: 0.5rem;">Model Performance & Metrics</h1>
+      <p class="text-muted">Transparent accuracy, precision, recall, and evaluation data for DAR's models.</p>
+    </div>
+
+    <div class="card" style="min-height: 200px; display: flex; align-items: center; justify-content: center; text-align: center;">
+      <div>
+        <p class="text-muted" style="font-weight: 600; margin-bottom: 0.5rem;">Evaluation charts & metrics display</p>
+        <p class="caption">Metrics tables and confusion matrix plots will be activated in P15.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

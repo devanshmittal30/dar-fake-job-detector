@@ -1,1 +1,63 @@
-<!-- Placeholder: header partial. To be implemented in P8. -->
+<!-- Header Partial: docs/02_UI_UX_SPEC.md section 3 -->
+<header class="site-header">
+  <div class="container header-container">
+    <!-- Brand: Logo + Descriptor -->
+    <a href="{{ url_for('pages.home') }}" class="header-brand" aria-label="DAR Home">
+      <img src="{{ url_for('static', filename='img/dar-logo.svg') }}" alt="DAR" class="header-logo">
+      <span class="header-descriptor">Fake Job Detector</span>
+    </a>
+
+    <!-- Desktop Navigation Links -->
+    <nav class="nav-desktop" aria-label="Main Navigation">
+      <a href="{{ url_for('pages.home') }}" class="nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
+      <a href="{{ url_for('pages.analyze') }}" class="nav-link {% if request.path.startswith('/analyze') %}active{% endif %}">Analyze Job</a>
+      <a href="{{ url_for('pages.community') }}" class="nav-link {% if request.path.startswith('/community') %}active{% endif %}">Community</a>
+      <a href="{{ url_for('pages.awareness') }}" class="nav-link {% if request.path.startswith('/awareness') %}active{% endif %}">Scam Awareness</a>
+      <a href="{{ url_for('pages.performance') }}" class="nav-link {% if request.path.startswith('/performance') %}active{% endif %}">Model Performance</a>
+      <a href="{{ url_for('pages.faq') }}" class="nav-link {% if request.path.startswith('/faq') %}active{% endif %}">FAQ</a>
+      <a href="{{ url_for('pages.about') }}" class="nav-link {% if request.path.startswith('/about') %}active{% endif %}">About</a>
+    </nav>
+
+    <!-- Desktop Auth Actions -->
+    <div class="header-actions">
+      <a href="{{ url_for('pages.auth') }}" class="btn btn-ghost btn-sm">Login</a>
+      <a href="{{ url_for('pages.auth') }}" class="btn btn-secondary btn-sm">Sign up</a>
+    </div>
+
+    <!-- Mobile Hamburger Toggle -->
+    <button type="button" class="hamburger-btn" id="hamburger-btn" aria-label="Open Navigation Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Navigation Drawer -->
+<div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
+<div class="mobile-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile Navigation">
+  <div class="mobile-nav-header">
+    <img src="{{ url_for('static', filename='img/dar-logo.svg') }}" alt="DAR" height="32">
+    <button type="button" id="mobile-nav-close" class="btn btn-ghost btn-sm" aria-label="Close Navigation Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+  <nav class="mobile-nav-links">
+    <a href="{{ url_for('pages.home') }}" class="mobile-nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
+    <a href="{{ url_for('pages.analyze') }}" class="mobile-nav-link {% if request.path.startswith('/analyze') %}active{% endif %}">Analyze Job</a>
+    <a href="{{ url_for('pages.community') }}" class="mobile-nav-link {% if request.path.startswith('/community') %}active{% endif %}">Community</a>
+    <a href="{{ url_for('pages.awareness') }}" class="mobile-nav-link {% if request.path.startswith('/awareness') %}active{% endif %}">Scam Awareness</a>
+    <a href="{{ url_for('pages.performance') }}" class="mobile-nav-link {% if request.path.startswith('/performance') %}active{% endif %}">Model Performance</a>
+    <a href="{{ url_for('pages.faq') }}" class="mobile-nav-link {% if request.path.startswith('/faq') %}active{% endif %}">FAQ</a>
+    <a href="{{ url_for('pages.about') }}" class="mobile-nav-link {% if request.path.startswith('/about') %}active{% endif %}">About</a>
+    <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+      <a href="{{ url_for('pages.analyze') }}" class="btn btn-primary" style="width: 100%;">Analyze a Job</a>
+      <a href="{{ url_for('pages.auth') }}" class="btn btn-secondary" style="width: 100%;">Login / Sign up</a>
+    </div>
+  </nav>
+</div>

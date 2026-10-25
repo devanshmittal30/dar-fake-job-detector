@@ -1,4 +1,26 @@
-<!-- home.html — Home page. To be implemented in P14. -->
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
 {% block title %}DAR | Check before you apply{% endblock %}
-{% block content %}<p>Home page placeholder.</p>{% endblock %}
+
+{% block content %}
+<section class="section section-hero">
+  <div class="container" style="text-align: center; max-width: 800px;">
+    <div style="margin-bottom: 1.25rem;">
+      <span class="chip">AI + Community powered</span>
+    </div>
+    <h1 style="margin-bottom: 1.25rem;">Is this job real? Check before you apply.</h1>
+    <p class="text-muted" style="font-size: 1.125rem; line-height: 1.6; margin-bottom: 2rem;">
+      Paste an ad, upload a screenshot or scan a poster with your camera. DAR tells you if it looks fake, why, and what other people say about it.
+    </p>
+    <div>
+      <a href="{{ url_for('pages.analyze') }}" class="btn btn-primary btn-lg">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        Analyze Job Now
+      </a>
+    </div>
+    <p class="caption" style="margin-top: 1rem;">
+      Free. No payment. Never share your bank details with a recruiter.
+    </p>
+  </div>
+</section>
+{% endblock %}

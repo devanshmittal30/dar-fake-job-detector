@@ -1,12 +1,87 @@
-<!-- app/templates/base.html — Base template for all pages. To be implemented in P8. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DAR | Check before you apply</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  
+  <!-- SEO & Brand Metadata (docs/02_UI_UX_SPEC.md section 2) -->
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/favicon-32.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+  <meta name="theme-color" content="#1D4ED8">
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DAR | Check before you apply">
+  <meta property="og:description" content="AI + Community powered fake job ad detection. Detect fraudulent job offers, fee scams, and misleading recruitments before you apply.">
+  <meta property="og:image" content="{{ url_for('static', filename='img/og-image.png') }}">
+  
+  <title>{% block title %}DAR | Check before you apply{% endblock %}</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans (Headings) and Inter (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Design System Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  {% block styles %}{% endblock %}
 </head>
 <body>
-    <p>Base template placeholder — to be built in P8.</p>
+  <!-- Skip to Main Content Link for Accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header Partial -->
+  {% include 'partials/_header.html' %}
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="container" style="margin-top: 1.5rem;">
+        {% for category, message in messages %}
+          <div class="card" style="border-left: 4px solid var(--{% if category == 'error' %}fake{% elif category == 'success' %}real{% else %}primary{% endif %}); margin-bottom: 0.75rem; padding: 1rem 1.25rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Main Content Block -->
+  <main id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Mobile Bottom Bar (Phones Only, Fixed Bottom) -->
+  <nav class="mobile-bottom-bar" aria-label="Mobile Bottom Bar">
+    <a href="{{ url_for('pages.home') }}" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Home</span>
+    </a>
+    <div class="bottom-nav-center">
+      <a href="{{ url_for('pages.analyze') }}" class="btn-center" aria-label="Analyze Job">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </a>
+    </div>
+    <a href="{{ url_for('pages.community') }}" class="bottom-nav-item {% if request.path.startswith('/community') %}active{% endif %}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+      <span>Community</span>
+    </a>
+    <a href="{{ url_for('pages.faq') }}" class="bottom-nav-item {% if request.path.startswith('/faq') %}active{% endif %}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      <span>FAQ</span>
+    </a>
+  </nav>
+
+  <!-- Footer Partial -->
+  {% include 'partials/_footer.html' %}
+
+  <!-- Global Toast Notification Container -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- Global Core JavaScript -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

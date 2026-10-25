@@ -1,4 +1,21 @@
-<!-- about.html — About page. To be implemented in P15. -->
-{% extends "base.html" %}
-{% block title %}About | DAR{% endblock %}
-{% block content %}<p>About page placeholder.</p>{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}About DAR | Check before you apply{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width: 860px;">
+    <div style="margin-bottom: 2rem;">
+      <h1 style="margin-bottom: 0.5rem;">About DAR</h1>
+      <p class="text-muted">Decision-support tool helping Indian job seekers detect fraudulent employment advertisements.</p>
+    </div>
+
+    <div class="card" style="min-height: 200px; display: flex; align-items: center; justify-content: center; text-align: center;">
+      <div>
+        <p class="text-muted" style="font-weight: 600; margin-bottom: 0.5rem;">About DAR details</p>
+        <p class="caption">Mission, student creator bio, methodology, and limitations will be activated in P15.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
