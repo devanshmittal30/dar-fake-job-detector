@@ -1,0 +1,38 @@
+{
+  "lr": {
+    "test": {
+      "threshold": 0.62,
+      "accuracy": 0.9848,
+      "precision": 0.873,
+      "recall": 0.7746,
+      "f1": 0.8209,
+      "roc_auc": 0.986,
+      "pr_auc": 0.9004,
+      "confusion_matrix": {
+        "tn": 2992,
+        "fp": 16,
+        "fn": 32,
+        "tp": 110
+      }
+    },
+    "external_test": null
+  },
+  "rf": {
+    "test": {
+      "threshold": 0.49,
+      "accuracy": 0.9756,
+      "precision": 0.7826,
+      "recall": 0.6338,
+      "f1": 0.7004,
+      "roc_auc": 0.9675,
+      "pr_auc": 0.781,
+      "confusion_matrix": {
+        "tn": 2983,
+        "fp": 25,
+        "fn": 52,
+        "tp": 90
+      }
+    },
+    "external_test": null
+  }
+}
