@@ -42,18 +42,12 @@ def test_result_page_renders_all_spec_sections(client):
     assert "Chance this ad is fake:" in html
     assert "Model used:" in html
     assert "See the other model's result" in html
-    assert "Why DAR says this" in html
-    assert "Words that pushed towards FAKE" in html
-    assert "Words that pushed towards REAL" in html
     assert "Warning signs found" in html
     assert "The ad text with highlights" in html
 
-    # 8.2 Colour legend
-    assert "What the colours mean" in html
-    assert "Fake-leaning words" in html
-    assert "Warning signs" in html
-    assert "Marked genuine" in html
-    assert "Marked fake" in html
+    # Removed per user customization
+    assert "Why DAR says this" not in html
+    assert "What the colours mean" not in html
 
     # 8.3 Verify this ad
     assert "Help others: is this ad genuine or fake?" in html

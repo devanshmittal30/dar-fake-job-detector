@@ -102,140 +102,37 @@
 
       <hr style="border: 0; border-top: 1px solid var(--border); margin: 2rem 0;">
 
-      <!-- 3. Why DAR says this -->
-      <div style="margin-bottom: 2rem;">
-        <h3 style="margin-bottom: 1.25rem; font-size: 1.25rem;">Why DAR says this</h3>
-
-        <!-- Words pushed towards FAKE -->
-        <div style="margin-bottom: 1.25rem;">
-          <h4 style="font-size: 0.9375rem; color: var(--fake); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            Words that pushed towards FAKE
-          </h4>
-          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            {% if res.top_fake_words %}
-              {% for item in res.top_fake_words %}
-                <span class="chip" style="background-color: var(--fake-soft); color: var(--fake); border-color: rgba(220, 38, 38, 0.25); font-weight: 600;">
-                  {{ item.word }}
-                  <span style="font-size: 0.75rem; opacity: 0.8; margin-left: 0.25rem;">+{{ item.weight }}</span>
-                </span>
-              {% endfor %}
-            {% else %}
-              <span class="caption text-muted">No strong fake-leaning words identified in this text.</span>
-            {% endif %}
-          </div>
-        </div>
-
-        <!-- Words pushed towards REAL -->
-        <div style="margin-bottom: 1.5rem;">
-          <h4 style="font-size: 0.9375rem; color: var(--real); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            Words that pushed towards REAL
-          </h4>
-          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            {% if res.top_real_words %}
-              {% for item in res.top_real_words %}
-                <span class="chip" style="background-color: var(--real-soft); color: var(--real); border-color: rgba(22, 163, 74, 0.25); font-weight: 600;">
-                  {{ item.word }}
-                  <span style="font-size: 0.75rem; opacity: 0.8; margin-left: 0.25rem;">-{{ item.weight }}</span>
-                </span>
-              {% endfor %}
-            {% else %}
-              <span class="caption text-muted">No strong real-leaning words identified in this text.</span>
-            {% endif %}
-          </div>
-        </div>
-
-        <!-- Warning signs found -->
-        <div style="background-color: var(--warn-soft); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 1.25rem;">
-          <h4 style="font-size: 0.9375rem; color: var(--warn-text); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-            Warning signs found
-          </h4>
-          {% if res.flags and res.flags|length > 0 %}
-            <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; padding-left: 0; margin-bottom: 0;">
-              {% for flag in res.flags %}
-                <li style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.9375rem; color: var(--text);">
-                  <span class="badge badge-warn" style="font-size: 0.6875rem; margin-top: 2px;">{{ flag.code }}</span>
-                  <span>{{ flag.message }}</span>
-                </li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            <p style="margin-bottom: 0; font-size: 0.9375rem; color: var(--text-muted);">
-              No warning signs found in the text.
-            </p>
-          {% endif %}
-        </div>
+      <!-- Warning signs found -->
+      <div style="background-color: var(--warn-soft); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem;">
+        <h4 style="font-size: 0.9375rem; color: var(--warn-text); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          Warning signs found
+        </h4>
+        {% if res.flags and res.flags|length > 0 %}
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; padding-left: 0; margin-bottom: 0;">
+            {% for flag in res.flags %}
+              <li style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.9375rem; color: var(--text);">
+                <span class="badge badge-warn" style="font-size: 0.6875rem; margin-top: 2px;">{{ flag.code }}</span>
+                <span>{{ flag.message }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p style="margin-bottom: 0; font-size: 0.9375rem; color: var(--text-muted);">
+            No warning signs found in the text.
+          </p>
+        {% endif %}
       </div>
 
       <hr style="border: 0; border-top: 1px solid var(--border); margin: 2rem 0;">
 
-      <!-- 4. The ad text with highlights -->
+      <!-- The ad text with highlights -->
       <div>
         <h4 style="font-size: 1rem; margin-bottom: 0.75rem;">The ad text with highlights</h4>
         <div style="background-color: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; max-height: 320px; overflow-y: auto; font-size: 0.9375rem; line-height: 1.7; white-space: pre-wrap;">
           {{ res.highlighted_html|safe }}
         </div>
       </div>
-    </div>
-
-    <!-- 8.2 COLOUR LEGEND CARD (directly below result) -->
-    <div class="card" style="padding: 1.75rem; margin-bottom: 2rem;">
-      <h3 style="margin-bottom: 1.25rem; font-size: 1.1875rem;">What the colours mean</h3>
-      <table class="legend-table" aria-label="Colour meaning reference table">
-        <tbody>
-          <tr>
-            <td style="width: 25%;">
-              <span class="swatch-chip"><span class="swatch swatch-red"></span> Red</span>
-            </td>
-            <td style="width: 25%; font-weight: 600; color: var(--fake);">Likely Fake</td>
-            <td style="color: var(--text-muted);">The model thinks this ad is probably fraudulent. Do not pay or share personal details.</td>
-          </tr>
-          <tr>
-            <td>
-              <span class="swatch-chip"><span class="swatch swatch-green"></span> Green</span>
-            </td>
-            <td style="font-weight: 600; color: var(--real);">Likely Real</td>
-            <td style="color: var(--text-muted);">The model found no strong signs of fraud. Still verify the company yourself.</td>
-          </tr>
-          <tr>
-            <td>
-              <span class="swatch-chip"><span class="swatch swatch-amber"></span> Amber</span>
-            </td>
-            <td style="font-weight: 600; color: var(--warn-text);">Uncertain / Warning</td>
-            <td style="color: var(--text-muted);">The model is not sure, or a warning sign was found. Check the company's official website.</td>
-          </tr>
-          <tr>
-            <td>
-              <span class="swatch-chip"><span class="swatch swatch-red-hl"></span> Red highlight</span>
-            </td>
-            <td style="font-weight: 600; color: var(--fake);">Fake-leaning words</td>
-            <td style="color: var(--text-muted);">Words in the ad that pushed the score towards fake.</td>
-          </tr>
-          <tr>
-            <td>
-              <span class="swatch-chip"><span class="swatch swatch-amber-hl"></span> Amber highlight</span>
-            </td>
-            <td style="font-weight: 600; color: var(--warn-text);">Warning signs</td>
-            <td style="color: var(--text-muted);">Phrases that match common scam tricks (for example asking for a fee).</td>
-          </tr>
-          <tr>
-            <td>
-              <span class="swatch-chip"><span class="swatch swatch-green-bar"></span> Green bar</span>
-            </td>
-            <td style="font-weight: 600; color: var(--real);">Marked genuine</td>
-            <td style="color: var(--text-muted);">Share of users who marked this ad as genuine.</td>
-          </tr>
-          <tr>
-            <td>
-              <span class="swatch-chip"><span class="swatch swatch-red-bar"></span> Red bar</span>
-            </td>
-            <td style="font-weight: 600; color: var(--fake);">Marked fake</td>
-            <td style="color: var(--text-muted);">Share of users who marked this ad as fake.</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
 
     <!-- 8.3 VERIFY THIS AD (directly below legend) -->
