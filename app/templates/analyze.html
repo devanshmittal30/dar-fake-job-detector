@@ -53,16 +53,87 @@
         </div>
       </div>
 
-      <!-- Tab 2: Image (Coming Next in P10) -->
-      <div id="tab-panel-image" role="tabpanel" style="display: none; text-align: center; padding: 3rem 1rem;">
-        <div style="width: 56px; height: 56px; border-radius: 50%; background-color: var(--primary-soft); color: var(--primary); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+      <!-- Tab 2: Image & Camera OCR (02_UI_UX_SPEC.md 7.2) -->
+      <div id="tab-panel-image" role="tabpanel" style="display: none;">
+        <!-- Two clear option buttons side by side (stacked on phones) -->
+        <div class="ocr-actions">
+          <button type="button" id="open-camera-btn" class="btn btn-secondary" style="flex: 1;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            Open camera
+          </button>
+          <button type="button" id="import-device-btn" class="btn btn-secondary" style="flex: 1;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            Import from device
+          </button>
+          <input type="file" id="image-file-input" accept="image/jpeg,image/png" style="display: none;">
         </div>
-        <h3 style="margin-bottom: 0.5rem;">Image OCR & Camera Input</h3>
-        <p class="text-muted" style="max-width: 480px; margin: 0 auto 1.5rem auto; font-size: 0.9375rem;">
-          Scanning posters and photo screenshots from your device or camera is being enabled in Stage 4 (P10).
-        </p>
-        <button type="button" id="switch-to-text-tab" class="btn btn-secondary btn-sm">Use Text Tab Instead</button>
+
+        <!-- Camera permission / support error alert -->
+        <div id="camera-error-alert" class="card" style="display: none; background-color: var(--fake-soft); border-color: rgba(220, 38, 38, 0.3); color: var(--fake); padding: 1rem 1.25rem; margin-bottom: 1.25rem;">
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <span style="font-size: 0.9375rem; line-height: 1.5;">We couldn't open the camera. Allow camera access in your browser settings, or import a photo instead.</span>
+          </div>
+        </div>
+
+        <!-- Live Camera Preview Container -->
+        <div id="camera-preview-container" class="camera-container" style="display: none;">
+          <video id="camera-video" class="camera-video" playsinline autoplay muted></video>
+          <canvas id="camera-canvas" style="display: none;"></canvas>
+          <div class="camera-controls">
+            <button type="button" id="camera-switch-btn" class="btn btn-ghost btn-sm" style="color: #FFFFFF; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);" title="Switch camera">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+              Switch
+            </button>
+            <button type="button" id="camera-capture-btn" class="round-capture-btn" title="Capture photo" aria-label="Capture photo"></button>
+            <button type="button" id="camera-cancel-btn" class="btn btn-ghost btn-sm" style="color: #FFFFFF; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);" title="Cancel">
+              Close
+            </button>
+          </div>
+        </div>
+
+        <!-- Drag-and-drop zone -->
+        <div id="image-dropzone" class="dropzone">
+          <div class="dropzone-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          </div>
+          <div>
+            <div style="font-weight: 600; color: var(--text);">Drag an image here, or use the buttons above.</div>
+            <div class="caption text-muted" style="margin-top: 0.25rem;">Supports JPG and PNG up to 5 MB</div>
+          </div>
+        </div>
+
+        <!-- Image Preview & Scanning Laser Container -->
+        <div id="image-scanning-container" style="display: none; margin-top: 1.25rem;">
+          <div class="image-preview-wrapper">
+            <img id="ocr-preview-img" src="" alt="Job advertisement preview">
+            <div id="ocr-laser" class="laser-scanner"></div>
+          </div>
+          <div id="ocr-status-msg" style="text-align: center; margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9375rem; font-weight: 500;">
+            Reading text from image...
+          </div>
+        </div>
+
+        <!-- OCR Error Alert -->
+        <div id="ocr-error-alert" class="card" style="display: none; background-color: var(--fake-soft); border-color: rgba(220, 38, 38, 0.3); color: var(--fake); padding: 1rem 1.25rem; margin-top: 1.25rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <span id="ocr-error-text" style="font-weight: 500;">We couldn't read any text. Try a clearer photo or paste the text instead.</span>
+          </div>
+        </div>
+
+        <!-- Extracted Text Container -->
+        <div id="ocr-result-container" style="display: none; margin-top: 1.25rem;">
+          <label for="ocr-extracted-textarea" class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Text we read</span>
+            <span class="caption">Looks wrong? Edit it before analyzing.</span>
+          </label>
+          <textarea id="ocr-extracted-textarea" class="textarea" rows="8"></textarea>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.25rem;">
+            <button type="button" id="ocr-retake-btn" class="btn btn-ghost btn-sm" style="padding: 0; font-size: 0.8125rem;">Retake / Choose different image</button>
+            <span id="ocr-word-counter" class="caption" style="font-weight: 600;">0 words</span>
+          </div>
+        </div>
       </div>
 
       <!-- Tab 3: Link Fetcher -->

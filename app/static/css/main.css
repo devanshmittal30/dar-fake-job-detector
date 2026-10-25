@@ -769,6 +769,142 @@ mark.highlight-warn {
   100% { background-position: -200% 0; }
 }
 
+/* --- IMAGE OCR & CAMERA STYLES (02_UI_UX_SPEC.md 7.2) --- */
+.ocr-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.btn-highlight {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.25) !important;
+  animation: pulseHighlight 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulseHighlight {
+  0% { transform: scale(1); box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.2); }
+  100% { transform: scale(1.02); box-shadow: 0 0 0 5px rgba(29, 78, 216, 0.4); }
+}
+
+.dropzone {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  background-color: #F8FAFC;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.dropzone:hover, .dropzone.dragover {
+  border-color: var(--primary);
+  background-color: var(--primary-soft);
+}
+
+.dropzone-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.camera-container {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #0F172A;
+  margin-bottom: 1.25rem;
+}
+
+.camera-video {
+  width: 100%;
+  max-height: 380px;
+  object-fit: cover;
+  display: block;
+}
+
+.camera-controls {
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  z-index: 10;
+}
+
+.round-capture-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  border: 4px solid var(--primary);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease;
+}
+
+.round-capture-btn:hover {
+  transform: scale(1.08);
+}
+
+.round-capture-btn:active {
+  transform: scale(0.95);
+}
+
+.image-preview-wrapper {
+  position: relative;
+  max-width: 420px;
+  margin: 0 auto 1.25rem auto;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  background-color: #0F172A;
+}
+
+.image-preview-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.laser-scanner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #2563EB, #60A5FA, #2563EB, transparent);
+  box-shadow: 0 0 12px 3px rgba(37, 99, 235, 0.85);
+  animation: scanLaser 1.8s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes scanLaser {
+  0% { top: 2%; opacity: 0.9; }
+  100% { top: 96%; opacity: 0.9; }
+}
+
+@media (max-width: 640px) {
+  .ocr-actions {
+    flex-direction: column;
+  }
+}
+
 /* --- 14. RESPONSIVE BREAKPOINTS --- */
 @media (max-width: 1024px) {
   .footer-grid {

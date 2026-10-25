@@ -255,6 +255,68 @@ def test_fetch_mocked_success(client, csrf_token):
             assert "var x = 1;" not in data["text"]
 
 
+def test_ocr_api_successful_upload(client, csrf_token):
+    """Verify POST /api/ocr successfully extracts text from uploaded image."""
+    import io
+    from PIL import Image, ImageDraw
+
+    img = Image.new("RGB", (800, 200), color=(255, 255, 255))
+    draw = ImageDraw.Draw(img)
+    draw.text((30, 80), "Hiring Marketing Executive with SEO Experience", fill=(0, 0, 0))
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+
+    headers = {"X-CSRFToken": csrf_token}
+    response = client.post(
+        "/api/ocr",
+        data={"image": (buf, "job_ad.png", "image/png")},
+        content_type="multipart/form-data",
+        headers=headers
+    )
+    assert response.status_code == 200
+    data = response.get_json()
+    assert "text" in data
+    assert "Marketing" in data["text"] or "Executive" in data["text"]
+
+
+def test_ocr_api_missing_file(client, csrf_token):
+    """Verify POST /api/ocr rejects request when image file is missing."""
+    headers = {"X-CSRFToken": csrf_token}
+    response = client.post(
+        "/api/ocr",
+        data={},
+        content_type="multipart/form-data",
+        headers=headers
+    )
+    assert response.status_code == 400
+    data = response.get_json()
+    assert "Please select an image file to upload." in data["error"]
+
+
+def test_ocr_api_blank_image_no_text(client, csrf_token):
+    """Verify POST /api/ocr returns no_text_found for a blank image."""
+    import io
+    from PIL import Image
+
+    img = Image.new("RGB", (400, 300), color=(255, 255, 255))
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+
+    headers = {"X-CSRFToken": csrf_token}
+    response = client.post(
+        "/api/ocr",
+        data={"image": (buf, "blank.png", "image/png")},
+        content_type="multipart/form-data",
+        headers=headers
+    )
+    assert response.status_code == 400
+    data = response.get_json()
+    assert data["error"] == "no_text_found"
+    assert "We couldn't read any text" in data["message"]
+
+
 def test_rate_limiting_enforced():
     """Verify rate limit returns 429 after exceeding 30 requests per minute."""
     rate_app = create_app(ApiTestConfig)

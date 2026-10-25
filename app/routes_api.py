@@ -9,6 +9,7 @@ Implements endpoints specified in docs/03_TECHNICAL_DESIGN.md (section 7 & 9):
 from flask import Blueprint, jsonify, request
 
 from app.fetcher import FetchError, safe_fetch_job_text
+from app.ocr import OCRError, extract_text_from_image
 from app.predictor import predict
 
 bp_api = Blueprint("api", __name__, url_prefix="/api")
@@ -87,3 +88,36 @@ def fetch_job_url():
         return jsonify({
             "error": "We couldn't read that page (it may need a login). Paste the text instead."
         }), 400
+
+
+@bp_api.route("/ocr", methods=["POST"])
+def ocr_job_image():
+    """Extract text from an uploaded job advertisement image.
+
+    Expects multipart/form-data:
+        file in request.files["image"] (JPG/PNG, max 5 MB)
+
+    Returns:
+        {"text": str} or {"error": "no_text_found", ...}
+    """
+    if "image" not in request.files:
+        return jsonify({"error": "Please select an image file to upload."}), 400
+
+    file = request.files["image"]
+    if not file or not file.filename:
+        return jsonify({"error": "No image selected."}), 400
+
+    try:
+        image_bytes = file.read()
+        extracted_text = extract_text_from_image(image_bytes)
+        return jsonify({"text": extracted_text}), 200
+    except OCRError as oe:
+        err_str = str(oe)
+        if err_str == "no_text_found":
+            return jsonify({
+                "error": "no_text_found",
+                "message": "We couldn't read any text. Try a clearer photo or paste the text instead."
+            }), 400
+        return jsonify({"error": err_str}), 400
+    except Exception as e:
+        return jsonify({"error": f"Image processing failed: {str(e)}"}), 500
