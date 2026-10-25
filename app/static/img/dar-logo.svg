@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 100" width="440" height="200" role="img" aria-label="DAR">
+  <title>DAR</title>
+  <defs>
+    <linearGradient id="dar-blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#1E3A8A"/>
+    </linearGradient>
+    <linearGradient id="dar-teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14B8A6"/>
+      <stop offset="1" stop-color="#0D9488"/>
+    </linearGradient>
+  </defs>
+  <path d="M14 20 V82 H34 C56 82 70 69 70 51 C70 33 56 20 34 20 Z" fill="none" stroke="url(#dar-blue)" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M88 82 L113 18 L138 82" fill="none" stroke="url(#dar-blue)" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M102 66 L110 74 L124 52" fill="none" stroke="url(#dar-teal)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M160 82 V20 H182 C195 20 203 29 203 40 C203 51 195 60 182 60 H160 M182 60 L206 82" fill="none" stroke="url(#dar-blue)" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

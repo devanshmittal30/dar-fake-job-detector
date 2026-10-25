@@ -1,0 +1,22 @@
+# --- Course-required: data and ML ---
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn
+
+# --- Other allowed Python packages ---
+joblib
+Flask
+Flask-SQLAlchemy
+Flask-Login
+Flask-WTF
+Flask-Limiter
+psycopg2-binary
+gunicorn
+python-dotenv
+Pillow
+pytesseract
+requests
+beautifulsoup4
+pytest

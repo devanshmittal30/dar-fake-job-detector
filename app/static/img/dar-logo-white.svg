@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 100" width="440" height="200" role="img" aria-label="DAR">
+  <title>DAR</title>
+  <path d="M14 20 V82 H34 C56 82 70 69 70 51 C70 33 56 20 34 20 Z" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M88 82 L113 18 L138 82" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M102 66 L110 74 L124 52" fill="none" stroke="#5EEAD4" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M160 82 V20 H182 C195 20 203 29 203 40 C203 51 195 60 182 60 H160 M182 60 L206 82" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

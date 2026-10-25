@@ -1,0 +1,15 @@
+# Lucide Icons
+# https://lucide.dev/
+# Licence: ISC (https://github.com/lucide-icons/lucide/blob/main/LICENSE)
+#
+# Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2022
+# as part of Feather (MIT). All other copyright (c) for Lucide are held
+# by Lucide Contributors 2022.
+#
+# Permission to use, copy, modify, and/or distribute this software for
+# any purpose with or without fee is hereby granted, provided that the
+# above copyright notice and this permission notice appear in all copies.
+#
+# Each SVG file in this folder is a single Lucide icon, stored locally
+# as required by 02_UI_UX_SPEC.md section 1.4 (no CDN).
+# Icons are inserted into templates using a Jinja macro.

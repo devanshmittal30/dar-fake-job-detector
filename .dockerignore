@@ -1,0 +1,14 @@
+.git
+.venv
+venv
+__pycache__
+data/raw
+data/processed
+tests
+.env
+.DS_Store
+.pytest_cache
+*.pyc
+NOTES.md
+docs/
+dar-brand/

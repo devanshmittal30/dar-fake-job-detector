@@ -1,0 +1,6 @@
+# This directory holds trained model files and configuration.
+# Created by ml/train.py and ml/evaluate.py:
+#   lr_pipeline.joblib    - Logistic Regression pipeline
+#   rf_pipeline.joblib    - Random Forest pipeline
+#   model_config.json     - thresholds, parameters, metadata
+#   metrics.json          - evaluation metrics

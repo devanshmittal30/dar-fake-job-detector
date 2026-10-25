@@ -1,0 +1,24 @@
+# Environment and secrets
+.env
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Data (raw and processed CSVs are not committed; see data/README.md)
+data/raw/
+data/processed/
+
+# Local database
+instance/
+*.db
+*.sqlite
+
+# OS files
+.DS_Store
+
+# Test cache
+.pytest_cache/
