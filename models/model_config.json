@@ -1,0 +1,36 @@
+{
+  "thresholds": {
+    "lr": 0.62,
+    "rf": 0.49
+  },
+  "uncertain_band": 0.1,
+  "default_model": null,
+  "sklearn_version": "1.9.1",
+  "training_date": "2026-10-26",
+  "dataset_names": [
+    "D1 (Kaggle EMSCAD)"
+  ],
+  "dataset_row_counts": {
+    "raw": 17880,
+    "unique_clean": 15749
+  },
+  "training_row_count": 12599,
+  "best_parameters": {
+    "lr": {
+      "C": 10.0
+    },
+    "rf": {
+      "max_depth": 40,
+      "min_samples_leaf": 2,
+      "n_estimators": 200
+    }
+  },
+  "cross_validation_f1": {
+    "lr_optimal": 0.8035,
+    "rf_optimal": 0.6573
+  },
+  "file_sizes_mb": {
+    "lr_pipeline": 0.38,
+    "rf_pipeline": 3.49
+  }
+}
