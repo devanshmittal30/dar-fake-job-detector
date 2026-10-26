@@ -144,6 +144,31 @@ document.addEventListener('DOMContentLoaded', () => {
   tabBtnText.addEventListener('click', () => setActiveTab('text'));
   tabBtnImage.addEventListener('click', () => setActiveTab('image'));
   tabBtnLink.addEventListener('click', () => setActiveTab('link'));
+
+  // ARIA Tablist keyboard navigation (ArrowLeft, ArrowRight)
+  const tabList = [
+    { name: 'text', btn: tabBtnText },
+    { name: 'image', btn: tabBtnImage },
+    { name: 'link', btn: tabBtnLink }
+  ];
+
+  tabList.forEach((tabItem, idx) => {
+    tabItem.btn.addEventListener('keydown', e => {
+      let nextIndex = null;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        nextIndex = (idx + 1) % tabList.length;
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        nextIndex = (idx - 1 + tabList.length) % tabList.length;
+      }
+      if (nextIndex !== null) {
+        tabList[nextIndex].btn.focus();
+        setActiveTab(tabList[nextIndex].name);
+      }
+    });
+  });
+
   window.addEventListener('beforeunload', stopCamera);
 
   // --- 2. Text Tab Handlers ---

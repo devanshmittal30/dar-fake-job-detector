@@ -33,5 +33,13 @@ class Config:
     WTF_CSRF_ENABLED = True
     WTF_CSRF_TIME_LIMIT = None  # Token valid for session duration
 
+    # Session and Cookie security (docs/03_TECHNICAL_DESIGN.md section 9)
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_SECURE = (FLASK_ENV == "production")
+    REMEMBER_COOKIE_HTTPONLY = True
+    REMEMBER_COOKIE_SAMESITE = "Lax"
+    REMEMBER_COOKIE_SECURE = (FLASK_ENV == "production")
+
     # Tesseract OCR path configuration (optional override)
     TESSERACT_CMD = os.getenv("TESSERACT_CMD", "")

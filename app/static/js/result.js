@@ -111,11 +111,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 3. Login Modal Control ---
+  // --- 3. Login Modal Control with Accessibility Focus Trap ---
+  let lastActiveElement = null;
+
   function openLoginModal() {
     if (loginModal) {
+      lastActiveElement = document.activeElement;
       loginModal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
+      // Move focus to modal close button or first interactive element
+      if (closeModalBtn) {
+        closeModalBtn.focus();
+      }
     }
   }
 
@@ -123,6 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginModal) {
       loginModal.style.display = 'none';
       document.body.style.overflow = '';
+      if (lastActiveElement && typeof lastActiveElement.focus === 'function') {
+        lastActiveElement.focus();
+      }
     }
   }
 
@@ -131,6 +141,29 @@ document.addEventListener('DOMContentLoaded', () => {
     loginModal.addEventListener('click', e => {
       if (e.target === loginModal) {
         closeLoginModal();
+      }
+    });
+
+    // Keyboard support: Escape closes modal & Tab trap
+    document.addEventListener('keydown', e => {
+      if (loginModal.style.display === 'flex') {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeLoginModal();
+        } else if (e.key === 'Tab') {
+          const focusable = loginModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+          if (focusable.length > 0) {
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
       }
     });
   }
