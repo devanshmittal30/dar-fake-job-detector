@@ -1,3 +1,6 @@
+# .dockerignore for DAR — Fake Job Detector
+# Following docs/03_TECHNICAL_DESIGN.md section 11
+
 .git
 .venv
 venv
@@ -5,10 +8,11 @@ __pycache__
 data/raw
 data/processed
 tests
+instance/
+*.db
+*.sqlite
 .env
 .DS_Store
 .pytest_cache
 *.pyc
 NOTES.md
-docs/
-dar-brand/

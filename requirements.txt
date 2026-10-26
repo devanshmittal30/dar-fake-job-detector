@@ -1,22 +1,68 @@
-# --- Course-required: data and ML ---
-numpy
-pandas
-matplotlib
-seaborn
-scikit-learn
+# Pinned requirements for DAR — Fake Job Detector
+# Pinned from working Python 3.11 environment (pip freeze)
+# scikit-learn version matches models/model_config.json ("1.9.1")
 
-# --- Other allowed Python packages ---
-joblib
-Flask
-Flask-SQLAlchemy
-Flask-Login
-Flask-WTF
-Flask-Limiter
-psycopg2-binary
-gunicorn
-python-dotenv
-Pillow
-pytesseract
-requests
-beautifulsoup4
-pytest
+# --- Core Data & Machine Learning ---
+numpy==2.4.6
+pandas==3.1.0
+scikit-learn==1.9.1
+scipy==1.17.1
+matplotlib==3.11.2
+seaborn==0.13.2
+joblib==1.6.0
+threadpoolctl==3.7.0
+
+# --- Web Framework & Security Extensions ---
+Flask==3.1.3
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+Flask-WTF==1.3.0
+Flask-Limiter==4.1.1
+SQLAlchemy==2.1.6
+Werkzeug==3.1.9
+WTForms==3.3.1
+Jinja2==3.1.6
+itsdangerous==2.2.0
+MarkupSafe==3.0.4
+blinker==1.9.0
+click==8.5.0
+limits==5.8.0
+ordered-set==4.1.0
+Deprecated==1.3.1
+wrapt==2.5.1
+typing_extensions==4.16.0
+
+# --- Database, Production Server & Environment ---
+psycopg2-binary==2.9.13
+gunicorn==26.2.0
+python-dotenv==1.2.4
+
+# --- Image Processing & OCR ---
+pillow==13.0.0
+pytesseract==0.3.13
+
+# --- Networking & Scraping ---
+requests==2.34.2
+beautifulsoup4==4.15.0
+soupsieve==3.0.4
+urllib3==2.8.0
+certifi==2026.10.23
+charset-normalizer==3.5.2
+idna==3.20
+
+# --- Testing & Utilities ---
+pytest==9.1.1
+iniconfig==2.3.1
+pluggy==1.7.0
+packaging==26.3
+Pygments==2.21.0
+python-dateutil==3.0.0
+six==1.17.0
+tzdata==2026.5
+fonttools==4.67.0
+contourpy==1.3.3
+cycler==0.12.1
+kiwisolver==1.5.1
+pyparsing==3.3.3
+narwhals==2.27.1
+cloudpickle==3.1.2
