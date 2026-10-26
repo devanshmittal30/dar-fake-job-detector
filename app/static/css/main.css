@@ -461,7 +461,7 @@ main {
 .nav-desktop {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .nav-link {
@@ -473,6 +473,10 @@ main {
   transition: color 0.15s ease;
   position: relative;
   padding: 0.25rem 0;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.5;
 }
 
 .nav-link:hover, .nav-link.active {
