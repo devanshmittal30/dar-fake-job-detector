@@ -20,8 +20,8 @@ DAR analyzes the text using Machine Learning (TF-IDF with Logistic Regression or
 
 Created as a first-year college project by **Devansh Mittal**.
 
-- **Live Application:** [LIVE_URL]
-- **Source Code Repository:** [GITHUB_REPO_URL]
+- **Live Application:** [https://dar-fake-job-detector.onrender.com](https://dar-fake-job-detector.onrender.com)
+- **Source Code Repository:** [https://github.com/devanshmittal30/dar-fake-job-detector](https://github.com/devanshmittal30/dar-fake-job-detector)
 
 ---
 
@@ -75,7 +75,7 @@ Created as a first-year college project by **Devansh Mittal**.
 
 ```bash
 # 1. Clone the repository
-git clone [GITHUB_REPO_URL]
+git clone https://github.com/devanshmittal30/dar-fake-job-detector.git
 cd dar-fake-job-detector
 
 # 2. Create and activate virtual environment
@@ -103,7 +103,7 @@ Open `http://127.0.0.1:5001` in your browser.
 
 ```cmd
 :: 1. Clone the repository
-git clone [GITHUB_REPO_URL]
+git clone https://github.com/devanshmittal30/dar-fake-job-detector.git
 cd dar-fake-job-detector
 
 :: 2. Create and activate virtual environment
@@ -269,5 +269,5 @@ As an honest machine learning project, DAR's boundaries and limitations are tran
 ## 12. Author & Acknowledgements
 
 - **Author:** Devansh Mittal (First-year college project)
-- **Project Repository:** [GITHUB_REPO_URL]
+- **Project Repository:** [https://github.com/devanshmittal30/dar-fake-job-detector](https://github.com/devanshmittal30/dar-fake-job-detector)
 - **Documentation:** See `docs/01_PRD.md`, `docs/02_UI_UX_SPEC.md`, `docs/03_TECHNICAL_DESIGN.md`, and `docs/04_DEVELOPMENT_ROADMAP.md`.
