@@ -118,60 +118,34 @@ document.addEventListener('DOMContentLoaded', () => {
       // 2. Fill Ratings Section
       if (ratingsLoading) ratingsLoading.style.display = 'none';
 
-      const ratingCount = data.rating_count || 0;
-      const avg = data.avg_rating;
+      const reviews = data.reviews || [];
 
-      if (ratingCount === 0 || avg === null || avg === undefined) {
+      if (reviews.length === 0) {
         if (ratingsEmptyState) ratingsEmptyState.style.display = 'block';
         if (ratingsContent) ratingsContent.style.display = 'none';
       } else {
-        if (ratingsContent) ratingsContent.style.display = 'grid';
+        if (ratingsContent) ratingsContent.style.display = 'block';
         if (ratingsEmptyState) ratingsEmptyState.style.display = 'none';
 
-        if (summaryAvg) summaryAvg.textContent = avg.toFixed(1);
-        if (summaryStars) summaryStars.textContent = renderStars(avg);
-        if (summaryCount) {
-          summaryCount.textContent = `Based on ${ratingCount.toLocaleString()} rating${ratingCount === 1 ? '' : 's'}`;
-        }
-
-        // Star distribution bars
-        const dist = data.distribution || {};
-        for (let s = 1; s <= 5; s++) {
-          const count = dist[String(s)] || 0;
-          const barEl = document.getElementById(`dist-bar-${s}`);
-          const countEl = document.getElementById(`dist-count-${s}`);
-          const pct = ratingCount > 0 ? (count / ratingCount) * 100 : 0;
-
-          if (barEl) barEl.style.width = `${pct}%`;
-          if (countEl) countEl.textContent = count.toLocaleString();
-        }
-
-        // Reviews Grid (up to 6 approved 4-5 star reviews)
-        const reviews = data.reviews || [];
         if (reviewsGrid) {
           reviewsGrid.innerHTML = '';
-          if (reviews.length === 0) {
-            if (noReviewsNote) noReviewsNote.style.display = 'block';
-          } else {
-            if (noReviewsNote) noReviewsNote.style.display = 'none';
-            reviews.forEach(rev => {
-              const card = document.createElement('div');
-              card.className = 'review-card';
-              card.innerHTML = `
-                <div style="color: #F59E0B; font-size: 1.125rem; margin-bottom: 0.5rem;" aria-label="${rev.stars} stars">
-                  ${'★'.repeat(rev.stars)}${'☆'.repeat(5 - rev.stars)}
-                </div>
-                <p style="font-size: 0.9375rem; line-height: 1.5; color: var(--text); margin-bottom: 1rem; flex-grow: 1;">
-                  "${escapeHtml(rev.comment)}"
-                </p>
-                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.75rem; margin-top: auto;">
-                  <strong style="font-size: 0.875rem;">${escapeHtml(rev.first_name)}</strong>
-                  <span class="caption text-muted">${escapeHtml(rev.date)}</span>
-                </div>
-              `;
-              reviewsGrid.appendChild(card);
-            });
-          }
+          reviews.forEach(rev => {
+            const card = document.createElement('div');
+            card.className = 'review-card';
+            card.innerHTML = `
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <strong style="font-size: 0.9375rem; color: var(--text);">${escapeHtml(rev.first_name)}</strong>
+                <span class="caption text-muted" style="font-size: 0.8125rem;">${escapeHtml(rev.date)}</span>
+              </div>
+              <div style="color: #F59E0B; font-size: 1.125rem; margin-bottom: 0.75rem;" aria-label="${rev.stars} stars">
+                ${'★'.repeat(rev.stars)}${'☆'.repeat(5 - rev.stars)}
+              </div>
+              <p style="font-size: 0.9375rem; line-height: 1.55; color: var(--text); margin-bottom: 0; flex-grow: 1;">
+                "${escapeHtml(rev.comment)}"
+              </p>
+            `;
+            reviewsGrid.appendChild(card);
+          });
         }
       }
     } catch (err) {

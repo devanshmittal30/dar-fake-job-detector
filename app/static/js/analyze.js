@@ -305,6 +305,45 @@ document.addEventListener('DOMContentLoaded', () => {
     imageFileInput.click();
   });
 
+  // Fast client-side image optimization: downscale huge phone photos before upload
+  async function prepareImageBlob(fileOrBlob) {
+    if (fileOrBlob.size < 400 * 1024) {
+      return fileOrBlob;
+    }
+    return new Promise(resolve => {
+      const img = new Image();
+      const url = URL.createObjectURL(fileOrBlob);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        let w = img.width;
+        let h = img.height;
+        const maxDim = 1600;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        canvas.toBlob(blob => {
+          resolve(blob || fileOrBlob);
+        }, 'image/jpeg', 0.88);
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve(fileOrBlob);
+      };
+      img.src = url;
+    });
+  }
+
   // Send Image to POST /api/ocr with scanning laser animation
   async function processImageFileOrBlob(fileOrBlob, filename = 'image.jpg') {
     // Reset views
@@ -329,9 +368,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ocrLaser.style.display = 'block';
     ocrStatusMsg.textContent = 'Reading text from image...';
 
+    // Optimize image blob for blazing fast upload & OCR
+    const optimizedBlob = await prepareImageBlob(fileOrBlob);
+
     // Prepare multipart form data
     const formData = new FormData();
-    formData.append('image', fileOrBlob, filename);
+    formData.append('image', optimizedBlob, filename);
 
     try {
       const response = await darFetch('/api/ocr', {

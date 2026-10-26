@@ -21,8 +21,8 @@ import pytesseract
 # Constants
 MAX_IMAGE_BYTES = 5 * 1024 * 1024  # 5 MB
 ALLOWED_FORMATS = {"JPEG", "PNG"}
-TARGET_WIDTH = 1500
-MAX_DIMENSION = 4000
+TARGET_WIDTH = 1000
+MAX_DIMENSION = 1600
 
 
 class OCRError(Exception):
@@ -99,22 +99,21 @@ def extract_text_from_image(image_bytes: bytes) -> str:
     except Exception:
         pass  # If autocontrast fails on an unusual palette, continue with greyscale
 
-    # 4. Resize: enlarge small images to target width ~1500 px, never above 4000 px
+    # 4. Fast Resize: downscale large images (cap at 1600 px) and scale up tiny images (< 600 px)
     w, h = img.size
-    if w < TARGET_WIDTH and w > 0:
+    if w > MAX_DIMENSION or h > MAX_DIMENSION:
+        scale = min(MAX_DIMENSION / float(w), MAX_DIMENSION / float(h))
+        new_w = int(w * scale)
+        new_h = int(h * scale)
+        img = img.resize((new_w, new_h), Image.Resampling.BILINEAR)
+    elif w < 600 and w > 0:
         scale = TARGET_WIDTH / float(w)
         new_w = TARGET_WIDTH
         new_h = int(h * scale)
         if new_h > MAX_DIMENSION:
             new_h = MAX_DIMENSION
             new_w = int(w * (MAX_DIMENSION / float(h)))
-        img = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
-    elif w > MAX_DIMENSION or h > MAX_DIMENSION:
-        # Scale down if exceeds max dimension
-        scale = min(MAX_DIMENSION / float(w), MAX_DIMENSION / float(h))
-        new_w = int(w * scale)
-        new_h = int(h * scale)
-        img = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+        img = img.resize((new_w, new_h), Image.Resampling.BILINEAR)
 
     # 5. Configure Tesseract path
     pytesseract.pytesseract.tesseract_cmd = get_tesseract_cmd()
