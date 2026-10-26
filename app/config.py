@@ -60,6 +60,14 @@ class Config:
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # Engine options for Neon serverless PostgreSQL:
+    # pool_pre_ping checks connections before use so suspended Neon compute doesn't cause 502/500 errors
+    # pool_recycle recycles idle connections before Neon's 5-minute timeout drops them
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+    }
+
     # CSRF protection enabled
     WTF_CSRF_ENABLED = True
     WTF_CSRF_TIME_LIMIT = None  # Token valid for session duration
