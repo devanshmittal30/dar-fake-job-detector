@@ -449,19 +449,14 @@ main {
 }
 
 .header-descriptor {
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  border-left: 1px solid var(--border);
-  padding-left: 0.75rem;
-  line-height: 1.2;
+  display: none;
 }
 
 .nav-desktop {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1.75rem;
+  margin-left: 2rem;
 }
 
 .nav-link {
