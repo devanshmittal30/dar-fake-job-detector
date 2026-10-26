@@ -87,9 +87,12 @@ def create_app(config_class: type = Config) -> Flask:
 
     # Database initialization & matcher cache preloading
     with app.app_context():
-        db.create_all()
-        from app.matcher import load_cache_from_db
-        load_cache_from_db()
+        try:
+            db.create_all()
+            from app.matcher import load_cache_from_db
+            load_cache_from_db()
+        except Exception as exc:
+            app.logger.warning("Database startup note (deferred until first request): %s", exc)
 
     # Health check route
     @app.route("/health", methods=["GET"])

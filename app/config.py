@@ -16,9 +16,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 
+from sqlalchemy.engine import make_url
+
+
 def _normalize_database_url(raw_url: str | None, default_url: str) -> str:
     """Sanitize and normalize the database connection URL for SQLAlchemy.
     Handles quotes, psql command prefixes, postgres:// schemes, and empty env vars.
+    Safely validates with make_url and falls back to default_url on any parse error.
     """
     if not raw_url:
         return default_url
@@ -35,9 +39,14 @@ def _normalize_database_url(raw_url: str | None, default_url: str) -> str:
     # Handle postgres:// vs postgresql:// protocol in Render/Heroku URLs
     if url.startswith("postgres://"):
         url = "postgresql://" + url[len("postgres://"):]
-    if not url:
+    # Must be postgresql or sqlite scheme
+    if not (url.startswith("postgresql://") or url.startswith("sqlite:///")):
         return default_url
-    return url
+    try:
+        make_url(url)
+        return url
+    except Exception:
+        return default_url
 
 
 class Config:
