@@ -16,16 +16,38 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 
+def _normalize_database_url(raw_url: str | None, default_url: str) -> str:
+    """Sanitize and normalize the database connection URL for SQLAlchemy.
+    Handles quotes, psql command prefixes, postgres:// schemes, and empty env vars.
+    """
+    if not raw_url:
+        return default_url
+    url = raw_url.strip()
+    # Strip key name if accidentally pasted in Render Value field
+    if url.startswith("DATABASE_URL="):
+        url = url[len("DATABASE_URL="):].strip()
+    # Strip psql CLI command prefix if copied from Neon psql tab
+    if url.startswith("psql "):
+        url = url[5:].strip()
+    # Strip outer quotes
+    if (url.startswith('"') and url.endswith('"')) or (url.startswith("'") and url.endswith("'")):
+        url = url[1:-1].strip()
+    # Handle postgres:// vs postgresql:// protocol in Render/Heroku URLs
+    if url.startswith("postgres://"):
+        url = "postgresql://" + url[len("postgres://"):]
+    if not url:
+        return default_url
+    return url
+
+
 class Config:
     """Base application configuration."""
     SECRET_KEY = os.getenv("SECRET_KEY", "dar-dev-secret-key-change-in-production-1234567890")
     FLASK_ENV = os.getenv("FLASK_ENV", "development")
 
     # Database: SQLite in instance folder for local development, Neon PostgreSQL in production
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'instance' / 'dar.db'}")
-    # Handle postgres:// vs postgresql:// protocol in Render/Heroku URLs
-    if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
-        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
+    _default_db = f"sqlite:///{BASE_DIR / 'instance' / 'dar.db'}"
+    SQLALCHEMY_DATABASE_URI = _normalize_database_url(os.getenv("DATABASE_URL"), _default_db)
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
