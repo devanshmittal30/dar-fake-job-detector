@@ -5,17 +5,222 @@
 {% block content %}
 <section class="section">
   <div class="container" style="max-width: 860px;">
+
+    <!-- Page Header (02_UI_UX_SPEC.md 9.4) -->
     <div style="margin-bottom: 2rem;">
-      <h1 style="margin-bottom: 0.5rem;">Frequently Asked Questions</h1>
-      <p class="text-muted">Everything you need to know about how DAR detects fake jobs.</p>
+      <div style="margin-bottom: 0.75rem;">
+        <span class="chip">Frequently Asked Questions</span>
+      </div>
+      <h1 style="margin-bottom: 0.75rem;">Frequently asked questions</h1>
+      <p class="text-muted" style="font-size: 1.0625rem; line-height: 1.6; margin-bottom: 0;">
+        Clear, direct answers about DAR's machine learning verdicts, data privacy, community voting, and scam safety.
+      </p>
     </div>
 
-    <div class="card" style="min-height: 200px; display: flex; align-items: center; justify-content: center; text-align: center;">
-      <div>
-        <p class="text-muted" style="font-weight: 600; margin-bottom: 0.5rem;">Interactive FAQ Accordion</p>
-        <p class="caption">Keyboard-accessible FAQ accordion will be activated in P15.</p>
+    <!-- Accordion Container -->
+    <div class="faq-accordion" id="faq-accordion" style="display: flex; flex-direction: column; gap: 0.75rem;">
+
+      <!-- Q1 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-1" aria-expanded="false" aria-controls="faq-panel-1" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>1. Is DAR 100% accurate?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-1" class="faq-panel" role="region" aria-labelledby="faq-btn-1" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            No. DAR is a decision-support tool. Our measured accuracy, precision and recall are on the Performance page. Always verify a company on its official website.
+          </p>
+        </div>
       </div>
+
+      <!-- Q2 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-2" aria-expanded="false" aria-controls="faq-panel-2" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>2. What does "Uncertain" mean?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-2" class="faq-panel" role="region" aria-labelledby="faq-btn-2" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            The model is not confident either way. Check the company's official website and never pay anything.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-3" aria-expanded="false" aria-controls="faq-panel-3" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>3. How does DAR decide?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-3" class="faq-panel" role="region" aria-labelledby="faq-btn-3" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            It compares the words in the ad with thousands of real and fake job ads it learned from, and also looks for common scam signs such as asking for a fee.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-4" aria-expanded="false" aria-controls="faq-panel-4" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>4. Which data was the model trained on?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-4" class="faq-panel" role="region" aria-labelledby="faq-btn-4" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            A public research dataset of job postings (Kaggle "Real / Fake Job Posting Prediction", based on the EMSCAD dataset from the University of the Aegean) and any extra datasets listed on the About page. The exact sizes are on the Performance page.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-5" aria-expanded="false" aria-controls="faq-panel-5" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>5. Do you store my screenshots or photos?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-5" class="faq-panel" role="region" aria-labelledby="faq-btn-5" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            No. Images are read in memory and deleted. The text that DAR reads is stored so that votes can be matched to the same ad.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-6" aria-expanded="false" aria-controls="faq-panel-6" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>6. How do thumbs up and thumbs down work?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-6" class="faq-panel" role="region" aria-labelledby="faq-btn-6" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            Thumbs up means you believe the ad is genuine. Thumbs down means you believe it is fake. You need an account, you get one vote per ad, and you can change it.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-7" aria-expanded="false" aria-controls="faq-panel-7" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>7. Does the community vote change DAR's verdict?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-7" class="faq-panel" role="region" aria-labelledby="faq-btn-7" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            No. The AI verdict and the community votes are shown separately.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-8" aria-expanded="false" aria-controls="faq-panel-8" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>8. Why do I need an account?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-8" class="faq-panel" role="region" aria-labelledby="faq-btn-8" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            To stop one person voting many times. We store your name, email and a hashed password only.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q9 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-9" aria-expanded="false" aria-controls="faq-panel-9" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>9. Why is the first page load slow sometimes?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-9" class="faq-panel" role="region" aria-labelledby="faq-btn-9" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            DAR runs on free hosting that goes to sleep after 15 minutes without visitors and takes up to a minute to wake up.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q10 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-10" aria-expanded="false" aria-controls="faq-panel-10" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>10. Can DAR read ads in Hindi?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-10" class="faq-panel" role="region" aria-labelledby="faq-btn-10" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            Not yet. DAR works with English text only.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q11 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-11" aria-expanded="false" aria-controls="faq-panel-11" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>11. What should I do if I already paid a scammer?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-11" class="faq-panel" role="region" aria-labelledby="faq-btn-11" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            Stop paying, keep all screenshots and receipts, call the cyber fraud helpline 1930 immediately and file a complaint at cybercrime.gov.in. Tell your bank.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q12 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-12" aria-expanded="false" aria-controls="faq-panel-12" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>12. How are ratings shown on the home page?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-12" class="faq-panel" role="region" aria-labelledby="faq-btn-12" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            The star average counts every rating. Written comments appear only after they are reviewed.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q13 -->
+      <div class="card faq-item" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <button type="button" class="faq-trigger" id="faq-btn-13" aria-expanded="false" aria-controls="faq-panel-13" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; background: none; border: none; font-size: 1.0625rem; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s ease;">
+          <span>13. Who made DAR?</span>
+          <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; transition: transform 0.2s ease;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="faq-panel-13" class="faq-panel" role="region" aria-labelledby="faq-btn-13" hidden style="padding: 0 1.5rem 1.25rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9375rem; color: var(--text); line-height: 1.6;">
+          <p style="margin: 1rem 0 0 0;">
+            DAR was created by Devansh Mittal.
+          </p>
+        </div>
+      </div>
+
     </div>
+
   </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/faq.js') }}"></script>
 {% endblock %}

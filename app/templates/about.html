@@ -4,18 +4,204 @@
 
 {% block content %}
 <section class="section">
-  <div class="container" style="max-width: 860px;">
+  <div class="container" style="max-width: 900px;">
+
+    <!-- Page Header (02_UI_UX_SPEC.md 9.5) -->
     <div style="margin-bottom: 2rem;">
-      <h1 style="margin-bottom: 0.5rem;">About DAR</h1>
-      <p class="text-muted">Decision-support tool helping Indian job seekers detect fraudulent employment advertisements.</p>
+      <div style="margin-bottom: 0.75rem;">
+        <span class="chip">Project Overview</span>
+      </div>
+      <h1 style="margin-bottom: 0.75rem;">About DAR</h1>
+      <p class="text-muted" style="font-size: 1.0625rem; line-height: 1.6; margin-bottom: 0;">
+        A transparent, open machine learning system built to protect Indian job seekers from recruitment fraud.
+      </p>
     </div>
 
-    <div class="card" style="min-height: 200px; display: flex; align-items: center; justify-content: center; text-align: center;">
-      <div>
-        <p class="text-muted" style="font-weight: 600; margin-bottom: 0.5rem;">About DAR details</p>
-        <p class="caption">Mission, student creator bio, methodology, and limitations will be activated in P15.</p>
+    <!-- 1. WHAT DAR IS (with 120px logo) -->
+    <div class="card" style="padding: 2rem; margin-bottom: 3rem;">
+      <div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
+        <img src="{{ url_for('static', filename='img/dar-app-icon.svg') }}" alt="DAR Icon" width="120" height="120" style="flex-shrink: 0; width: 120px; height: 120px; border-radius: 20px; background-color: var(--primary-soft); padding: 12px; box-shadow: var(--shadow);">
+        <div style="flex: 1; min-width: 260px;">
+          <h2 style="font-size: 1.375rem; margin-bottom: 0.75rem;">What DAR is</h2>
+          <p style="font-size: 1rem; color: var(--text); line-height: 1.6; margin-bottom: 0.75rem;">
+            DAR is an open decision-support tool created to help Indian job seekers evaluate employment opportunities before applying or paying any money. Every year, thousands of students and recent graduates fall victim to fraudulent job offers, training fees, and cyber scams.
+          </p>
+          <p style="font-size: 1rem; color: var(--text); line-height: 1.6; margin-bottom: 0;">
+            DAR combines transparent Natural Language Processing (scikit-learn with TF-IDF features) with public scam awareness and community verification to identify red flags before harm is done.
+          </p>
+        </div>
       </div>
     </div>
+
+    <!-- 2. HOW IT WORKS (7 STEPS) -->
+    <div style="margin-bottom: 3.5rem;">
+      <h2 style="font-size: 1.375rem; margin-bottom: 1.25rem;">How DAR Works (Architecture & Pipeline)</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+        
+        <!-- Step 1 -->
+        <div class="card" style="padding: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); font-weight: 800; font-size: 0.875rem; display: flex; align-items: center; justify-content: center;">1</div>
+            <h3 style="font-size: 1.0625rem; margin: 0;">Input</h3>
+          </div>
+          <p class="text-muted" style="font-size: 0.9375rem; margin: 0; line-height: 1.5;">
+            The job seeker provides job information via plain text, pasted URL, or a screenshot/flyer from mobile camera or device storage.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="card" style="padding: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); font-weight: 800; font-size: 0.875rem; display: flex; align-items: center; justify-content: center;">2</div>
+            <h3 style="font-size: 1.0625rem; margin: 0;">Read Text</h3>
+          </div>
+          <p class="text-muted" style="font-size: 0.9375rem; margin: 0; line-height: 1.5;">
+            Direct text is parsed immediately; images are processed in-memory via Tesseract OCR and instantly discarded; web URLs are scraped safely.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="card" style="padding: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); font-weight: 800; font-size: 0.875rem; display: flex; align-items: center; justify-content: center;">3</div>
+            <h3 style="font-size: 1.0625rem; margin: 0;">Clean Text</h3>
+          </div>
+          <p class="text-muted" style="font-size: 0.9375rem; margin: 0; line-height: 1.5;">
+            Shared cleaning routine strips HTML tags, lowercases characters, normalizes phone numbers and URLs, and removes noisy punctuation.
+          </p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="card" style="padding: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); font-weight: 800; font-size: 0.875rem; display: flex; align-items: center; justify-content: center;">4</div>
+            <h3 style="font-size: 1.0625rem; margin: 0;">TF-IDF Features</h3>
+          </div>
+          <p class="text-muted" style="font-size: 0.9375rem; margin: 0; line-height: 1.5;">
+            Extracts unigram and bigram TF-IDF word scores, weighting vocabulary that distinguishes legitimate company postings from fraudulent lures.
+          </p>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="card" style="padding: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); font-weight: 800; font-size: 0.875rem; display: flex; align-items: center; justify-content: center;">5</div>
+            <h3 style="font-size: 1.0625rem; margin: 0;">Model Scoring</h3>
+          </div>
+          <p class="text-muted" style="font-size: 0.9375rem; margin: 0; line-height: 1.5;">
+            Evaluated by Logistic Regression (default) or Random Forest using tuned probability cutoffs (0.62 for LR) to account for data imbalance.
+          </p>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="card" style="padding: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); font-weight: 800; font-size: 0.875rem; display: flex; align-items: center; justify-content: center;">6</div>
+            <h3 style="font-size: 1.0625rem; margin: 0;">Explanation</h3>
+          </div>
+          <p class="text-muted" style="font-size: 0.9375rem; margin: 0; line-height: 1.5;">
+            Produces an interpretable confidence gauge, highlights high-impact words in the posting, and lists concrete red flags found in the text.
+          </p>
+        </div>
+
+        <!-- Step 7 -->
+        <div class="card" style="padding: 1.5rem; grid-column: 1 / -1;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); font-weight: 800; font-size: 0.875rem; display: flex; align-items: center; justify-content: center;">7</div>
+            <h3 style="font-size: 1.0625rem; margin: 0;">Community Verification</h3>
+          </div>
+          <p class="text-muted" style="font-size: 0.9375rem; margin: 0; line-height: 1.5;">
+            Registered community members cast thumbs up (genuine) or thumbs down (fake) votes. The collective verdict is shown alongside the AI prediction to provide mutual corroboration.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 3. DATA SOURCES -->
+    <div style="margin-bottom: 3.5rem;">
+      <h2 style="font-size: 1.375rem; margin-bottom: 1.25rem;">Data Sources</h2>
+      <div class="card" style="padding: 0; overflow-x: auto;">
+        <table class="table" style="margin-bottom: 0; width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background-color: var(--bg-soft); border-bottom: 2px solid var(--border);">
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">ID</th>
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Dataset</th>
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Postings</th>
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Fake Count</th>
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Licence & Origin</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.875rem 1.25rem; font-weight: 700;">D1 (Primary)</td>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">
+                Kaggle "Real / Fake Job Posting Prediction"
+                <div style="font-size: 0.8125rem; color: var(--text-muted); font-weight: 400;">Processed version of EMSCAD (University of the Aegean)</div>
+              </td>
+              <td style="padding: 0.875rem 1.25rem;">17,880</td>
+              <td style="padding: 0.875rem 1.25rem;">866 (&lt;5%)</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">CC0 / Academic research use</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 700;">E1 (External)</td>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">
+                Owner-Collected External Benchmark
+                <div style="font-size: 0.8125rem; color: var(--text-muted); font-weight: 400;">Official scam warnings & verified company career pages</div>
+              </td>
+              <td style="padding: 0.875rem 1.25rem;">60 (target)</td>
+              <td style="padding: 0.875rem 1.25rem;">30 (target)</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">Creator collection for out-of-domain evaluation</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 4. LIMITATIONS (Tech design section 14 in plain words) -->
+    <div style="margin-bottom: 3.5rem;">
+      <h2 style="font-size: 1.375rem; margin-bottom: 1.25rem;">System Limitations</h2>
+      <div class="card" style="padding: 1.75rem;">
+        <p style="font-size: 0.9375rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          In accordance with scientific and engineering honesty, DAR documents its real-world limitations in plain words:
+        </p>
+
+        <ol style="padding-left: 1.25rem; margin-bottom: 0; font-size: 0.9375rem; color: var(--text); line-height: 1.7; display: flex; flex-direction: column; gap: 0.6rem;">
+          <li><strong>Class Imbalance:</strong> Public research data contains very few fake examples (866 in the 17,880 raw dataset), making fake job detection more challenging than the raw accuracy number suggests.</li>
+          <li><strong>Domain Shift:</strong> The models learned from structured job-portal text; social media posters, chat flyers, and WhatsApp forwards look different, which can reduce real-world accuracy.</li>
+          <li><strong>OCR Noise:</strong> OCR mistakes can alter words extracted from compressed images; users are encouraged to inspect and edit extracted text before analysis.</li>
+          <li><strong>Language Support:</strong> DAR currently evaluates English postings only. Postings in Hindi or regional Indian languages are not yet supported.</li>
+          <li><strong>Dataset Errors:</strong> Ground-truth labels in public datasets may occasionally contain misclassifications or historical noise.</li>
+          <li><strong>Decision Support Only:</strong> The model outputs a statistical probability, not legal proof. It should never substitute for verifying a company directly on its official website.</li>
+          <li><strong>Ad Matching Thresholds:</strong> Same-ad matching relies on cosine similarity of text embeddings; near-duplicate variations may occasionally miss or mis-link.</li>
+          <li><strong>Cold Starts:</strong> Free cloud hosting may spin down during idle periods and require up to 60 seconds to wake up for initial visitors.</li>
+          <li><strong>Community Voting Independence:</strong> Community votes may reflect individual opinions or biases; they are intentionally presented separately from the algorithmic AI verdict.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 5. THE NAME & CREATOR -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;" class="awareness-two-col">
+      <!-- The Name -->
+      <div class="card" style="padding: 1.75rem;">
+        <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem;">The Name "DAR"</h2>
+        <p style="font-size: 0.9375rem; color: var(--text); line-height: 1.6; margin-bottom: 0;">
+          <strong>"Dar"</strong> (डर) translates to <em>fear</em> in Hindi. The name reflects the mission of the system: fraudulent recruiters and deceptive job rackets should fear transparent, data-driven detection.
+        </p>
+      </div>
+
+      <!-- Creator -->
+      <div class="card" style="padding: 1.75rem; border-left: 4px solid var(--primary);">
+        <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem;">Project Creator</h2>
+        <p style="font-size: 1.0625rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem;">
+          Created by Devansh Mittal
+        </p>
+        <p style="font-size: 0.9375rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0;">
+          First year college project in Computer Science. Built using Python, Flask, scikit-learn, and vanilla web standards.
+        </p>
+      </div>
+    </div>
+
   </div>
 </section>
 {% endblock %}

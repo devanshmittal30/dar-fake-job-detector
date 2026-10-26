@@ -3,24 +3,377 @@
 {% block title %}DAR | Check before you apply{% endblock %}
 
 {% block content %}
+<!-- 6.2 BANNER (HERO) -->
 <section class="section section-hero">
-  <div class="container" style="text-align: center; max-width: 800px;">
-    <div style="margin-bottom: 1.25rem;">
-      <span class="chip">AI + Community powered</span>
+  <div class="container">
+    <div class="hero-grid">
+      <!-- Left Column: Copy -->
+      <div>
+        <div style="margin-bottom: 1.25rem;">
+          <span class="chip">AI + Community powered</span>
+        </div>
+        <h1 style="margin-bottom: 1.25rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15;">
+          Is this job real? Check before you apply.
+        </h1>
+        <p class="text-muted" style="font-size: 1.125rem; line-height: 1.6; margin-bottom: 0; max-width: 540px;">
+          Paste an ad, upload a screenshot or scan a poster with your camera. DAR tells you if it looks fake, why, and what other people say about it.
+        </p>
+      </div>
+
+      <!-- Right Column: Animated Graphic (02_UI_UX_SPEC.md 6.2 & 10.1) -->
+      <div>
+        <div class="hero-graphic-container">
+          <!-- Floating Tags -->
+          <div class="floating-tag floating-tag-warn">Fee demanded</div>
+          <div class="floating-tag floating-tag-info">No company info</div>
+
+          <!-- Job Ad Card with Moving Scan Line -->
+          <div class="hero-ad-card">
+            <div class="hero-scan-line" aria-hidden="true"></div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span class="caption text-muted" style="font-weight: 600;">URGENT HIRING</span>
+              <span class="badge badge-warn" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;">SCANNING</span>
+            </div>
+
+            <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Executive Data Entry Operator</h4>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
+              Earn ₹45,000/week from home. Immediate joining. Contact via WhatsApp only. Refundable registration fee applies...
+            </p>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <span class="chip" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">Work from Home</span>
+              <span class="chip" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">Part-Time</span>
+            </div>
+
+            <!-- Pop-in Shield Tick Graphic -->
+            <div class="hero-shield-tick" title="DAR Authentic Protection" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--real)" stroke-width="2.8">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <h1 style="margin-bottom: 1.25rem;">Is this job real? Check before you apply.</h1>
-    <p class="text-muted" style="font-size: 1.125rem; line-height: 1.6; margin-bottom: 2rem;">
-      Paste an ad, upload a screenshot or scan a poster with your camera. DAR tells you if it looks fake, why, and what other people say about it.
-    </p>
-    <div>
-      <a href="{{ url_for('pages.analyze') }}" class="btn btn-primary btn-lg">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+  </div>
+</section>
+
+<!-- 6.3 FOUR PROOF BOXES -->
+<section style="padding: 2rem 0 3rem; background-color: var(--bg);">
+  <div class="container">
+    <div class="proof-boxes-grid">
+      <!-- Box 1: Jobs analyzed -->
+      <div class="proof-box card-hover">
+        <div class="proof-icon-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <div class="proof-number" id="proof-analyses" data-count-target="0">0</div>
+        <div class="proof-label">Jobs analyzed</div>
+        <div class="proof-lines">
+          Trained on <span id="proof-training-rows">12,599</span> job ads
+        </div>
+      </div>
+
+      <!-- Box 2: Detection accuracy -->
+      <div class="proof-box card-hover">
+        <div class="proof-icon-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="6"></circle>
+            <circle cx="12" cy="12" r="2"></circle>
+          </svg>
+        </div>
+        <div class="proof-number" id="proof-accuracy">98.5%</div>
+        <div class="proof-label">Detection accuracy</div>
+        <div class="proof-lines">
+          Catches <span id="proof-recall">77.5%</span> of fake ads<br>
+          <span id="proof-precision">87.3%</span> precision<br>
+          <span style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.85;">Measured on test data the model never saw</span>
+        </div>
+      </div>
+
+      <!-- Box 3: Platform support -->
+      <div class="proof-box card-hover">
+        <div class="proof-icon-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+          </svg>
+        </div>
+        <div class="proof-number" style="font-size: 1.625rem; margin-top: 0.35rem;">Works everywhere</div>
+        <div class="proof-label" style="margin-top: 0.25rem;">Platform support</div>
+        <div class="proof-lines">
+          Phone, tablet and laptop browsers<br>
+          Reads screenshots from Instagram, WhatsApp, LinkedIn
+        </div>
+      </div>
+
+      <!-- Box 4: Available any time -->
+      <div class="proof-box card-hover">
+        <div class="proof-icon-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div class="proof-number">24/7</div>
+        <div class="proof-label">Available any time</div>
+        <div class="proof-lines">
+          Check any job ad, any time<br>
+          Your safety is our priority
+        </div>
+      </div>
+    </div>
+
+    <!-- 6.4 MAIN CALL TO ACTION -->
+    <div style="text-align: center; margin-top: 1rem; margin-bottom: 1.5rem;">
+      <a href="{{ url_for('pages.analyze') }}" class="btn btn-primary btn-lg btn-pulse" style="font-size: 1.0625rem; padding: 0.9rem 2.25rem;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
         Analyze Job Now
       </a>
+      <p class="caption text-muted" style="margin-top: 0.75rem; font-size: 0.875rem;">
+        Free. No payment. Never share your bank details with a recruiter.
+      </p>
     </div>
-    <p class="caption" style="margin-top: 1rem;">
-      Free. No payment. Never share your bank details with a recruiter.
+  </div>
+</section>
+
+<!-- 6.5 HOW IT WORKS -->
+<section class="section" style="border-top: 1px solid var(--border); background-color: var(--surface);">
+  <div class="container">
+    <div style="text-align: center; max-width: 680px; margin: 0 auto 2rem;">
+      <h2 style="margin-bottom: 0.5rem;">How DAR works</h2>
+      <p class="text-muted" style="font-size: 1rem;">
+        From suspicious screenshot to clear AI explanation in four simple steps.
+      </p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="steps-line" aria-hidden="true"></div>
+
+      <!-- Step 1 -->
+      <div class="step-card card-hover">
+        <div class="step-number-badge">1</div>
+        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Add the job ad</h3>
+        <p class="text-muted" style="font-size: 0.9375rem; line-height: 1.55; margin-bottom: 0;">
+          Paste the text, upload a screenshot, open your camera or paste a job link.
+        </p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card card-hover">
+        <div class="step-number-badge">2</div>
+        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">DAR reads it</h3>
+        <p class="text-muted" style="font-size: 0.9375rem; line-height: 1.55; margin-bottom: 0;">
+          For images, DAR reads the text on the picture. You can correct the text before checking.
+        </p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card card-hover">
+        <div class="step-number-badge">3</div>
+        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">The model checks it</h3>
+        <p class="text-muted" style="font-size: 0.9375rem; line-height: 1.55; margin-bottom: 0;">
+          A model trained on thousands of real and fake job ads scores the wording and looks for warning signs such as fee demands.
+        </p>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card card-hover">
+        <div class="step-number-badge">4</div>
+        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">See the result and verify</h3>
+        <p class="text-muted" style="font-size: 0.9375rem; line-height: 1.55; margin-bottom: 0;">
+          Get a verdict, a confidence score and the reasons. Then tell others whether the ad was genuine or fake.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6.6 WHY CHOOSE DAR -->
+<section class="section" style="border-top: 1px solid var(--border); background-color: var(--bg);">
+  <div class="container">
+    <div style="text-align: center; max-width: 680px; margin: 0 auto 2rem;">
+      <h2 style="margin-bottom: 0.5rem;">Why choose DAR</h2>
+      <p class="text-muted" style="font-size: 1rem;">
+        Built specifically for Indian students and job seekers facing predatory employment fraud.
+      </p>
+    </div>
+
+    <div class="why-grid">
+      <!-- Card 1 -->
+      <div class="why-card">
+        <div style="color: var(--primary); margin-bottom: 0.75rem;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </div>
+        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Explains its answer</h3>
+        <p class="text-muted" style="font-size: 0.9375rem; line-height: 1.55; margin-bottom: 0;">
+          See the exact words and warning signs behind every verdict.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="why-card">
+        <div style="color: var(--primary); margin-bottom: 0.75rem;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+        </div>
+        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Works with screenshots and photos</h3>
+        <p class="text-muted" style="font-size: 0.9375rem; line-height: 1.55; margin-bottom: 0;">
+          Check ads from Instagram, WhatsApp or a printed poster.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="why-card">
+        <div style="color: var(--primary); margin-bottom: 0.75rem;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Community verified</h3>
+        <p class="text-muted" style="font-size: 0.9375rem; line-height: 1.55; margin-bottom: 0;">
+          See how many users marked the same ad as fake or genuine.
+        </p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="why-card">
+        <div style="color: var(--primary); margin-bottom: 0.75rem;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </div>
+        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Honest about accuracy</h3>
+        <p class="text-muted" style="font-size: 0.9375rem; line-height: 1.55; margin-bottom: 0;">
+          Our accuracy, precision and recall are published openly on the Performance page.
+        </p>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="why-card">
+        <div style="color: var(--primary); margin-bottom: 0.75rem;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Private by design</h3>
+        <p class="text-muted" style="font-size: 0.9375rem; line-height: 1.55; margin-bottom: 0;">
+          Uploaded images are never stored.
+        </p>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="why-card">
+        <div style="color: var(--primary); margin-bottom: 0.75rem;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Free to use</h3>
+        <p class="text-muted" style="font-size: 0.9375rem; line-height: 1.55; margin-bottom: 0;">
+          No payment, ever. Real employers never ask you to pay either.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6.7 RATINGS AND WHAT USERS SAY -->
+<section class="section" style="border-top: 1px solid var(--border); background-color: var(--surface);">
+  <div class="container">
+    <div style="text-align: center; max-width: 680px; margin: 0 auto 2rem;">
+      <h2 style="margin-bottom: 0.5rem;">What users say about DAR</h2>
+      <p class="text-muted" style="font-size: 1rem;">
+        Genuine feedback from candidates across India who checked job postings before applying.
+      </p>
+    </div>
+
+    <!-- Container for dynamic content -->
+    <div id="home-ratings-container">
+      <!-- Ratings populated via home.js -->
+      <div id="ratings-loading" style="text-align: center; padding: 2rem;">
+        <div class="spinner" style="margin: 0 auto 1rem;"></div>
+        <p class="text-muted">Loading ratings and reviews...</p>
+      </div>
+
+      <!-- State: Has Ratings -->
+      <div id="ratings-content" class="ratings-section-grid" style="display: none;">
+        <!-- Left: RatingSummary -->
+        <div class="rating-summary-card">
+          <div id="summary-avg" style="font-family: var(--font-heading); font-size: 2.75rem; font-weight: 800; color: var(--text); line-height: 1;">
+            0.0
+          </div>
+          <div style="color: #F59E0B; font-size: 1.25rem; margin: 0.5rem 0;" id="summary-stars">
+            ★★★★★
+          </div>
+          <div class="caption text-muted" id="summary-count" style="margin-bottom: 1.25rem;">
+            Based on 0 ratings
+          </div>
+
+          <!-- Star Distribution Bars (1 to 5) -->
+          <div id="summary-distribution" style="text-align: left;">
+            {% for s in range(5, 0, -1) %}
+              <div class="dist-row">
+                <span style="width: 32px; font-weight: 600;">{{ s }} ★</span>
+                <div class="dist-bar-wrapper">
+                  <div class="dist-bar-fill" id="dist-bar-{{ s }}" style="width: 0%;"></div>
+                </div>
+                <span id="dist-count-{{ s }}" class="text-muted" style="width: 24px; text-align: right;">0</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Right: ReviewCards Grid -->
+        <div>
+          <div id="reviews-grid" class="reviews-grid"></div>
+          <p id="no-reviews-note" class="text-muted" style="display: none; padding: 1.5rem; background: var(--bg); border-radius: var(--radius-card); text-align: center;">
+            No written reviews yet. Ratings are submitted after analyzing job ads.
+          </p>
+        </div>
+      </div>
+
+      <!-- State: Empty State (no ratings yet) -->
+      <div id="ratings-empty-state" class="card" style="display: none; text-align: center; padding: 3rem 1.5rem; max-width: 600px; margin: 0 auto;">
+        <h3 style="margin-bottom: 0.5rem; font-size: 1.1875rem;">No ratings yet</h3>
+        <p class="text-muted" style="margin-bottom: 1.25rem;">
+          No ratings yet. Analyze a job ad and be the first to rate DAR.
+        </p>
+        <div>
+          <a href="{{ url_for('pages.analyze') }}" class="btn btn-secondary">
+            Analyze a job ad
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Note under the section (02_UI_UX_SPEC.md 6.7) -->
+    <p class="caption text-muted" style="text-align: center; margin-top: 2rem; margin-bottom: 0;">
+      Ratings come only from users who have analyzed an ad. Comments are reviewed before they appear.
     </p>
   </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock %}

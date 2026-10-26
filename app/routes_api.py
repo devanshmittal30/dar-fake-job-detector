@@ -6,7 +6,9 @@ Implements endpoints specified in docs/03_TECHNICAL_DESIGN.md (section 7 & 9):
 - POST /api/fetch: SSRF-safe URL content fetcher
 """
 
+import json
 from datetime import datetime, timezone
+from pathlib import Path
 from flask import Blueprint, jsonify, request
 from flask_login import current_user
 from sqlalchemy import case, func
@@ -18,6 +20,11 @@ from app.ocr import OCRError, extract_text_from_image
 from app.predictor import predict
 
 bp_api = Blueprint("api", __name__, url_prefix="/api")
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+CONFIG_FILE = PROJECT_ROOT / "models" / "model_config.json"
+METRICS_FILE = PROJECT_ROOT / "models" / "metrics.json"
+STATS_FILE = PROJECT_ROOT / "app" / "static" / "data" / "india_stats.json"
 
 
 @bp_api.route("/analyze", methods=["POST"])
@@ -474,5 +481,156 @@ def get_community():
         "page": page,
         "pages": total_pages,
         "total": total_items
+    }), 200
+
+
+@bp_api.route("/home", methods=["GET"])
+def get_home_data():
+    """Return live metrics for proof boxes and approved user reviews for Home page.
+    
+    Response format (docs/03_TECHNICAL_DESIGN.md section 7):
+        {
+            "analyses_total": int,
+            "training_rows": int | "n/a",
+            "accuracy": float | "n/a",
+            "recall": float | "n/a",
+            "precision": float | "n/a",
+            "avg_rating": float | None,
+            "rating_count": int,
+            "distribution": {"1": int, "2": int, "3": int, "4": int, "5": int},
+            "reviews": [{"stars": int, "comment": str, "first_name": str, "date": str}]
+        }
+    """
+    # 1. Total jobs checked across the platform
+    total_checks = db.session.query(func.coalesce(func.sum(Ad.check_count), 0)).scalar() or 0
+
+    # 2. Training rows and test metrics
+    training_rows = "n/a"
+    accuracy = "n/a"
+    recall = "n/a"
+    precision = "n/a"
+    default_model = "lr"
+
+    if CONFIG_FILE.exists():
+        try:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                cfg = json.load(f)
+                training_rows = cfg.get("training_row_count", "n/a")
+                default_model = cfg.get("default_model", "lr")
+        except Exception:
+            pass
+
+    if METRICS_FILE.exists():
+        try:
+            with open(METRICS_FILE, "r", encoding="utf-8") as f:
+                metrics = json.load(f)
+                test_m = metrics.get(default_model, {}).get("test", {})
+                if "accuracy" in test_m:
+                    accuracy = round(float(test_m["accuracy"]) * 100, 1)
+                if "recall" in test_m:
+                    recall = round(float(test_m["recall"]) * 100, 1)
+                if "precision" in test_m:
+                    precision = round(float(test_m["precision"]) * 100, 1)
+        except Exception:
+            pass
+
+    # 3. Overall ratings and star distribution
+    rating_count = Rating.query.count()
+    raw_avg = db.session.query(func.avg(Rating.stars)).scalar()
+    avg_rating = round(float(raw_avg), 1) if raw_avg is not None else None
+
+    distribution = {str(i): 0 for i in range(1, 6)}
+    dist_query = db.session.query(Rating.stars, func.count(Rating.id)).group_by(Rating.stars).all()
+    for s_val, count_val in dist_query:
+        if 1 <= s_val <= 5:
+            distribution[str(s_val)] = count_val
+
+    # 4. Up to 6 newest approved reviews with 4 or 5 stars
+    approved_ratings = (
+        Rating.query
+        .filter(
+            Rating.approved == True,
+            Rating.stars.in_([4, 5]),
+            Rating.comment.isnot(None),
+            Rating.comment != ""
+        )
+        .order_by(Rating.created_at.desc())
+        .limit(6)
+        .all()
+    )
+
+    reviews = []
+    for r in approved_ratings:
+        first_name = "Anonymous"
+        if r.user and r.user.name:
+            first_name = r.user.name.strip().split()[0]
+        date_str = r.created_at.strftime("%b %d, %Y") if r.created_at else ""
+
+        reviews.append({
+            "stars": r.stars,
+            "comment": r.comment,
+            "first_name": first_name,
+            "date": date_str
+        })
+
+    return jsonify({
+        "analyses_total": total_checks,
+        "training_rows": training_rows,
+        "accuracy": accuracy,
+        "recall": recall,
+        "precision": precision,
+        "avg_rating": avg_rating,
+        "rating_count": rating_count,
+        "distribution": distribution,
+        "reviews": reviews
+    }), 200
+
+
+@bp_api.route("/stats", methods=["GET"])
+def get_india_stats():
+    """Return Indian cyber fraud and scam awareness statistics from india_stats.json.
+    
+    Response format (docs/03_TECHNICAL_DESIGN.md section 7 & 02_UI_UX_SPEC.md section 14).
+    """
+    if not STATS_FILE.exists():
+        return jsonify({"error": "Statistics data not found"}), 404
+    try:
+        with open(STATS_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return jsonify(data), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to load statistics: {str(e)}"}), 500
+
+
+@bp_api.route("/metrics", methods=["GET"])
+def get_model_metrics():
+    """Return model performance metrics and configuration without server paths.
+    
+    Response format (docs/03_TECHNICAL_DESIGN.md section 7):
+        {"metrics": {...}, "config": {...}}
+    """
+    metrics_content = {}
+    config_content = {}
+
+    if METRICS_FILE.exists():
+        try:
+            with open(METRICS_FILE, "r", encoding="utf-8") as f:
+                metrics_content = json.load(f)
+        except Exception:
+            pass
+
+    if CONFIG_FILE.exists():
+        try:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                config_content = json.load(f)
+        except Exception:
+            pass
+
+    # Sanitize config: exclude any potential filesystem paths
+    sanitized_config = {k: v for k, v in config_content.items() if not k.endswith("_path")}
+
+    return jsonify({
+        "metrics": metrics_content,
+        "config": sanitized_config
     }), 200
 

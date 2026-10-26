@@ -5,17 +5,236 @@
 {% block content %}
 <section class="section">
   <div class="container">
+
+    <!-- Page Header (02_UI_UX_SPEC.md 9.3) -->
     <div style="margin-bottom: 2rem;">
-      <h1 style="margin-bottom: 0.5rem;">Model Performance & Metrics</h1>
-      <p class="text-muted">Transparent accuracy, precision, recall, and evaluation data for DAR's models.</p>
+      <div style="margin-bottom: 0.75rem;">
+        <span class="chip">Model Performance & Metrics</span>
+      </div>
+      <h1 style="margin-bottom: 0.75rem;">How well does DAR work?</h1>
+      <p class="text-muted" style="font-size: 1.0625rem; max-width: 760px; line-height: 1.6; margin-bottom: 0;">
+        Full transparency on model evaluation, training datasets, confusion matrices, and decision thresholds.
+      </p>
     </div>
 
-    <div class="card" style="min-height: 200px; display: flex; align-items: center; justify-content: center; text-align: center;">
-      <div>
-        <p class="text-muted" style="font-weight: 600; margin-bottom: 0.5rem;">Evaluation charts & metrics display</p>
-        <p class="caption">Metrics tables and confusion matrix plots will be activated in P15.</p>
+    <!-- Mandatory Scope / Imbalance Note (02_UI_UX_SPEC.md 9.3) -->
+    <div class="card" style="background-color: var(--primary-soft); border: 1px solid rgba(29, 78, 216, 0.2); margin-bottom: 2.5rem; padding: 1.25rem 1.5rem;">
+      <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2" style="flex-shrink: 0; margin-top: 2px;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <p style="margin-bottom: 0; font-size: 0.9375rem; color: var(--text); line-height: 1.5;">
+          <strong>Why accuracy alone is misleading:</strong> Only about 5% of ads in the training data are fake, so accuracy alone can look high. Precision and recall show how well fake ads are caught.
+        </p>
       </div>
     </div>
+
+    <!-- 1. METRICS TABLE FOR BOTH MODELS -->
+    <div style="margin-bottom: 3.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h2 style="font-size: 1.375rem; margin-bottom: 0.25rem;">Evaluation Metrics on 3,150 Test Ads</h2>
+          <p class="text-muted" style="font-size: 0.9375rem; margin-bottom: 0;">Evaluated on a 20% stratified test split that the models never saw during training.</p>
+        </div>
+        <span class="badge" style="background-color: var(--real-soft); color: var(--real); font-weight: 700;">Default Model: Logistic Regression</span>
+      </div>
+
+      <div class="card" style="padding: 0; overflow-x: auto;">
+        <table class="table" style="margin-bottom: 0; width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background-color: var(--bg-soft); border-bottom: 2px solid var(--border);">
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Metric</th>
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Logistic Regression (Default)</th>
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Random Forest</th>
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">What it measures</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">Accuracy</td>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 700; color: var(--text);" id="m-lr-acc">98.5%</td>
+              <td style="padding: 0.875rem 1.25rem; color: var(--text-muted);" id="m-rf-acc">97.6%</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">Overall percentage of correct predictions</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">Precision (Fake)</td>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 700; color: var(--primary);" id="m-lr-prec">87.3%</td>
+              <td style="padding: 0.875rem 1.25rem; color: var(--text-muted);" id="m-rf-prec">78.3%</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">When flagged fake, how often it was truly fake (low false alarms)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">Recall (Fake)</td>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 700; color: var(--primary);" id="m-lr-rec">77.5%</td>
+              <td style="padding: 0.875rem 1.25rem; color: var(--text-muted);" id="m-rf-rec">63.4%</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">Percentage of all actual fake postings successfully caught</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">F1-Score (Fake)</td>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 700; color: var(--text);" id="m-lr-f1">82.1%</td>
+              <td style="padding: 0.875rem 1.25rem; color: var(--text-muted);" id="m-rf-f1">70.0%</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">Harmonic mean of precision and recall</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">ROC-AUC</td>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 700; color: var(--text);" id="m-lr-roc">0.986</td>
+              <td style="padding: 0.875rem 1.25rem; color: var(--text-muted);" id="m-rf-roc">0.968</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">Discriminative power across all possible probability thresholds</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">PR-AUC</td>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 700; color: var(--text);" id="m-lr-pr">0.900</td>
+              <td style="padding: 0.875rem 1.25rem; color: var(--text-muted);" id="m-rf-pr">0.781</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">Area under Precision-Recall curve (best metric for imbalanced data)</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">Optimal Threshold</td>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 700; color: var(--text);" id="m-lr-thresh">0.62</td>
+              <td style="padding: 0.875rem 1.25rem; color: var(--text-muted);" id="m-rf-thresh">0.49</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">Tuned on training cross-validation to maximize fake F1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 2. COMPARISON CHARTS & CONFUSION MATRIX -->
+    <div style="margin-bottom: 3.5rem;">
+      <h2 style="font-size: 1.375rem; margin-bottom: 1.25rem;">Visual Evaluation & Confusion Matrices</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;" class="awareness-two-col">
+        <!-- Confusion Matrix Card -->
+        <div class="card" style="padding: 1.75rem;">
+          <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Confusion Matrices (Test Set)</h3>
+          <p class="caption text-muted" style="margin-bottom: 1rem;">
+            Test breakdown (142 actual fakes, 3,008 actual reals).
+          </p>
+          <div style="text-align: center; margin-bottom: 1rem;">
+            <img src="{{ url_for('static', filename='img/plots/eval_confusion_matrices.png') }}" alt="Confusion Matrices for Logistic Regression and Random Forest" style="max-width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--border);">
+          </div>
+          <div style="font-size: 0.8125rem; color: var(--text-muted); line-height: 1.5;">
+            <strong>Logistic Regression:</strong> 110 True Positives, 16 False Positives, 32 False Negatives, 2,992 True Negatives.<br>
+            <strong>Random Forest:</strong> 90 True Positives, 25 False Positives, 52 False Negatives, 2,983 True Negatives.
+          </div>
+        </div>
+
+        <!-- Metric Comparison Chart -->
+        <div class="card" style="padding: 1.75rem;">
+          <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Model Comparison</h3>
+          <p class="caption text-muted" style="margin-bottom: 1rem;">
+            Side-by-side comparison of test metrics between models.
+          </p>
+          <div style="text-align: center; margin-bottom: 1rem;">
+            <img src="{{ url_for('static', filename='img/plots/eval_metric_comparison.png') }}" alt="Evaluation Metric Comparison Bar Chart" style="max-width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--border);">
+          </div>
+          <p class="caption text-muted" style="margin-bottom: 0; font-size: 0.8125rem;">
+            Logistic Regression achieves higher precision (+9.0%) and higher recall (+14.1%) than Random Forest on TF-IDF features.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. TOP WORDS & LEARNED FEATURES -->
+    <div style="margin-bottom: 3.5rem;">
+      <h2 style="font-size: 1.375rem; margin-bottom: 1.25rem;">Top Feature Words & Interpretability</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;" class="awareness-two-col">
+        <div class="card" style="padding: 1.75rem;">
+          <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Model Coefficients (Top Words)</h3>
+          <p class="caption text-muted" style="margin-bottom: 1rem;">
+            Words pushing predictions towards Fake (+) vs Real (-).
+          </p>
+          <div style="text-align: center;">
+            <img src="{{ url_for('static', filename='img/plots/eval_top_words_coefficients.png') }}" alt="Top Words and Model Coefficients" style="max-width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--border);">
+          </div>
+        </div>
+
+        <div class="card" style="padding: 1.75rem;">
+          <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Precision-Recall & ROC Curves</h3>
+          <p class="caption text-muted" style="margin-bottom: 1rem;">
+            Receiver Operating Characteristic and Precision-Recall tradeoffs.
+          </p>
+          <div style="text-align: center;">
+            <img src="{{ url_for('static', filename='img/plots/eval_roc_pr_curves.png') }}" alt="ROC and Precision-Recall Curves" style="max-width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--border);">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. DATASET AND SPLIT SIZES -->
+    <div style="margin-bottom: 3.5rem;">
+      <h2 style="font-size: 1.375rem; margin-bottom: 1.25rem;">Dataset & Split Sizes</h2>
+      <div class="card" style="padding: 0; overflow-x: auto;">
+        <table class="table" style="margin-bottom: 0; width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background-color: var(--bg-soft); border-bottom: 2px solid var(--border);">
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Dataset Stage</th>
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Total Postings</th>
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Genuine Ads</th>
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Fake Ads</th>
+              <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;">Source / Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">D1 Raw (Kaggle EMSCAD)</td>
+              <td style="padding: 0.875rem 1.25rem;">17,880</td>
+              <td style="padding: 0.875rem 1.25rem;">17,014 (95.2%)</td>
+              <td style="padding: 0.875rem 1.25rem;">866 (4.8%)</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">Employment Scam Aegean Dataset (University of the Aegean)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">Unique Cleaned Postings</td>
+              <td style="padding: 0.875rem 1.25rem;">15,749</td>
+              <td style="padding: 0.875rem 1.25rem;">15,041 (95.5%)</td>
+              <td style="padding: 0.875rem 1.25rem;">708 (4.5%)</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">After HTML stripping, deduplication, and minimum text filter</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">Training Split (80%)</td>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 700;">12,599</td>
+              <td style="padding: 0.875rem 1.25rem;">12,033</td>
+              <td style="padding: 0.875rem 1.25rem;">566</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">Used for TF-IDF fitting and 5-fold cross-validation</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 600;">Test Split (20%)</td>
+              <td style="padding: 0.875rem 1.25rem; font-weight: 700;">3,150</td>
+              <td style="padding: 0.875rem 1.25rem;">3,008</td>
+              <td style="padding: 0.875rem 1.25rem;">142</td>
+              <td style="padding: 0.875rem 1.25rem; font-size: 0.875rem; color: var(--text-muted);">Held-out final evaluation set</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 5. EXTERNAL TEST SET NOTE -->
+    <div style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.375rem; margin-bottom: 1.25rem;">External Benchmark Set (E1)</h2>
+      <div class="card" style="padding: 1.75rem;">
+        <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2" style="flex-shrink: 0; margin-top: 2px;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <div>
+            <h3 style="font-size: 1.125rem; margin-bottom: 0.35rem;">Real-World Domain Shift Testing</h3>
+            <p class="text-muted" style="font-size: 0.9375rem; line-height: 1.6; margin-bottom: 0.5rem;">
+              The external test set E1 is planned as a 60-ad benchmark (30 verified fake postings from official cybercrime advisories and 30 verified genuine corporate postings) to evaluate how well models generalize outside the portal training domain.
+            </p>
+            <p class="caption text-muted" style="margin-bottom: 0;" id="external-test-status">
+              Status: No external test evaluation results recorded in models/metrics.json yet.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/performance.js') }}"></script>
 {% endblock %}

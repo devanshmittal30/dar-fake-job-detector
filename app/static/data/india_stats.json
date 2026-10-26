@@ -1,4 +1,83 @@
 {
-  "_note": "India online fraud statistics. Source and checked_on date for every number. To be filled in P15 from 02_UI_UX_SPEC.md section 14.",
-  "stats": []
+  "_note": "Official Indian cyber fraud and job scam statistics strictly from docs/02_UI_UX_SPEC.md section 14. All figures cover all online financial fraud in India unless marked as job scams. Checked on 2026-10-26.",
+  "yearly_losses": [
+    {
+      "year": "2023",
+      "amount_crore": 7465,
+      "formatted": "about Rs 7,465 crore",
+      "period": "2023",
+      "source": "I4C data, reported by IANS (Jan 2026)",
+      "checked_on": "2026-10-26"
+    },
+    {
+      "year": "2024",
+      "amount_crore": 22845,
+      "formatted": "about Rs 22,845 crore",
+      "complaints": "about 36.4 lakh complaints, NCRP + CFCFRMS",
+      "period": "2024",
+      "source": "Ministry of Home Affairs reply in Parliament, reported July 2025",
+      "checked_on": "2026-10-26"
+    },
+    {
+      "year": "2025",
+      "amount_crore": 22495,
+      "formatted": "about Rs 22,495 crore",
+      "period": "2025",
+      "source": "National Cyber Crime Reporting Portal data, reported by Free Press Journal",
+      "checked_on": "2026-10-26"
+    },
+    {
+      "year": "2026 (H1)",
+      "amount_crore": 10178,
+      "formatted": "over Rs 10,178 crore",
+      "complaints": "about 12.71 lakh complaints",
+      "period": "Jan to Jun 2026",
+      "source": "MHA-chaired meeting data as reported by a secondary source: verify",
+      "checked_on": "2026-10-26"
+    }
+  ],
+  "total_six_years": {
+    "amount_crore": 52976,
+    "formatted": "over Rs 52,976 crore",
+    "period": "2019-2025",
+    "source": "I4C, reported by IANS (Jan 2026)",
+    "checked_on": "2026-10-26"
+  },
+  "fake_investment_share_2025": {
+    "percentage": 76,
+    "formatted": "76%",
+    "description": "Share of 2025 losses from fake investment schemes",
+    "period": "2025",
+    "source": "I4C data tabled in Parliament, reported by MoneyLife and CyberPeace",
+    "checked_on": "2026-10-26"
+  },
+  "recovery_rate_2025": {
+    "percentage": 24,
+    "formatted": "about 24%",
+    "description": "Share of money recovered in 2025",
+    "period": "2025",
+    "source": "MoneyLife citing MHA data",
+    "checked_on": "2026-10-26"
+  },
+  "ncrb_police_cases": {
+    "period": "2021-2023",
+    "cases_by_year": {
+      "2021": 52974,
+      "2022": 65893,
+      "2023": 86420
+    },
+    "fraud_share_description": "about 69% fraud",
+    "formatted": "2021: 52,974; 2022: 65,893; 2023: 86,420 (about 69% fraud)",
+    "source": "NCRB \"Crime in India 2023\"",
+    "checked_on": "2026-10-26"
+  },
+  "rescued_indians_southeast_asia": {
+    "count": 6700,
+    "formatted": "over 6,700",
+    "description": "Indians rescued from fake-job / cyber-scam rackets in Southeast Asia (reported Dec 2025)",
+    "scope": "job scams",
+    "period": "Up to Dec 2025",
+    "source": "Business Standard",
+    "checked_on": "2026-10-26"
+  }
 }
