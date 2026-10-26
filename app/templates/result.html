@@ -142,7 +142,7 @@
         Your community vote helps protect job seekers across India.
       </p>
 
-      <!-- Two Large Voting Buttons (TEMPORARY: disabled/wired in P13) -->
+      <!-- Two Large Voting Buttons -->
       <div class="vote-actions">
         <button type="button" class="btn-vote btn-vote-genuine" id="vote-genuine-btn" data-vote="genuine">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
@@ -154,21 +154,36 @@
         </button>
       </div>
 
+      <!-- User vote status message -->
+      <p id="vote-user-status" class="caption" style="display: none; margin-bottom: 0.75rem; font-weight: 500; color: var(--primary);"></p>
+
       <!-- Counts line (always shown) -->
-      <div style="font-size: 0.9375rem; color: var(--text); margin-bottom: 0.5rem;">
-        <strong>0</strong> users marked this ad as fake &nbsp;|&nbsp; <strong>0</strong> users marked it as genuine
+      <div id="vote-counts-line" style="font-size: 0.9375rem; color: var(--text); margin-bottom: 0.5rem;">
+        <strong id="count-fake">0</strong> users marked this ad as fake &nbsp;|&nbsp; <strong id="count-genuine">0</strong> users marked it as genuine
       </div>
 
       <!-- VoteBar -->
       <div class="vote-bar-wrapper">
-        <div class="vote-bar-fake" style="width: 0%;"></div>
-        <div class="vote-bar-genuine" style="width: 0%;"></div>
+        <div class="vote-bar-fake" id="bar-fake" style="width: 0%;" title="Marked fake"></div>
+        <div class="vote-bar-genuine" id="bar-genuine" style="width: 0%;" title="Marked genuine"></div>
+      </div>
+
+      <!-- Vote percentages subtitle -->
+      <div id="vote-pct-line" class="caption text-muted" style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        <span id="fake-pct-label"></span>
+        <span id="genuine-pct-label"></span>
       </div>
 
       <!-- Empty state text -->
-      <p class="caption text-muted" style="margin-top: 0.5rem; margin-bottom: 0;">
+      <p id="vote-empty-state" class="caption text-muted" style="margin-top: 0.5rem; margin-bottom: 0;">
         No community votes yet. Be the first to verify this ad.
       </p>
+
+      <!-- Disagreement note (amber, when AI verdict and majority of at least 3 votes differ) -->
+      <div id="disagreement-banner" class="disagreement-banner" style="display: none; margin-top: 1rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <span>The AI and the community disagree. Verify the company on its official website.</span>
+      </div>
     </div>
 
     <!-- 8.4 RATE YOUR EXPERIENCE -->
@@ -194,10 +209,15 @@
         <textarea id="rating-comment" class="textarea" rows="3" maxlength="200" placeholder="Tell us how accurate or helpful this analysis was..."></textarea>
       </div>
 
-      <!-- Submit Rating button (TEMPORARY: wired in P13) -->
+      <!-- Submit Rating button and Status -->
       <div style="margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
         <button type="button" id="submit-rating-btn" class="btn btn-secondary">Submit rating</button>
-        <span class="caption text-muted" id="rating-notice">Thank you. Comments are reviewed before they appear on our home page.</span>
+        {% if not current_user.is_authenticated %}
+          <a href="{{ url_for('pages.auth') }}?next={{ request.path }}" class="caption text-muted" id="login-to-rate-link" style="text-decoration: underline;">
+            Log in to rate DAR
+          </a>
+        {% endif %}
+        <span class="caption text-muted" id="rating-notice" style="display: none;">Thank you. Comments are reviewed before they appear on our home page.</span>
       </div>
     </div>
 

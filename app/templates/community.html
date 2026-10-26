@@ -5,17 +5,107 @@
 {% block content %}
 <section class="section">
   <div class="container">
-    <div style="margin-bottom: 2rem;">
-      <h1 style="margin-bottom: 0.5rem;">Community Verified Jobs</h1>
-      <p class="text-muted">Browse recently checked job postings and see user verification votes.</p>
+    
+    <!-- Page Header (02_UI_UX_SPEC.md section 9.1) -->
+    <div class="community-header">
+      <h1 style="margin-bottom: 0.5rem;">Community reports</h1>
+      <p class="text-muted" style="font-size: 1.0625rem; max-width: 680px; margin-bottom: 0;">
+        Browse recent Community Verified Jobs evaluated by DAR's AI engine and verified by Indian job seekers.
+      </p>
     </div>
 
-    <div class="card" style="min-height: 200px; display: flex; align-items: center; justify-content: center; text-align: center;">
-      <div>
-        <p class="text-muted" style="font-weight: 600; margin-bottom: 0.5rem;">Community feed and vote filters</p>
-        <p class="caption">Community voting and ad browsing will be activated in P13.</p>
+    <!-- Search & Filter Controls -->
+    <div class="community-controls">
+      <!-- Search Input -->
+      <div class="community-search-bar">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="search" 
+          id="community-search" 
+          class="input community-search-input" 
+          placeholder="Search by keywords, company name, or description..."
+          aria-label="Search job postings"
+        >
+      </div>
+
+      <!-- Filter Chips & Sort Controls -->
+      <div class="community-filter-row">
+        <!-- Filter Chips (All, Marked fake, Marked genuine, Disputed) -->
+        <div class="filter-chips-group" role="group" aria-label="Filter community reports">
+          <button type="button" class="filter-chip active" data-filter="all">All</button>
+          <button type="button" class="filter-chip" data-filter="fake">Marked fake</button>
+          <button type="button" class="filter-chip" data-filter="genuine">Marked genuine</button>
+          <button type="button" class="filter-chip" data-filter="disputed">Disputed</button>
+        </div>
+
+        <!-- Sort Select (Newest, Most votes) -->
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <label for="community-sort" class="caption text-muted" style="margin-bottom: 0; white-space: nowrap;">Sort by:</label>
+          <select id="community-sort" class="select" style="padding: 0.4rem 2rem 0.4rem 0.75rem; font-size: 0.875rem; height: auto;">
+            <option value="newest">Newest</option>
+            <option value="votes">Most votes</option>
+          </select>
+        </div>
       </div>
     </div>
+
+    <!-- Loading State -->
+    <div id="community-loading" style="text-align: center; padding: 3rem 1rem;">
+      <div class="spinner" style="margin: 0 auto 1rem;"></div>
+      <p class="text-muted">Loading community reports...</p>
+    </div>
+
+    <!-- Ad Cards Grid -->
+    <div id="community-grid" class="ad-grid" style="display: none;"></div>
+
+    <!-- Empty State (No ads in system) -->
+    <div id="community-empty-board" class="card" style="display: none; text-align: center; padding: 3.5rem 1.5rem; margin-bottom: 2rem;">
+      <div style="width: 64px; height: 64px; border-radius: 50%; background-color: var(--primary-soft); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+      <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">No reports yet</h3>
+      <p class="text-muted" style="max-width: 440px; margin: 0 auto 1.5rem;">
+        No reports yet. Analyze an ad to start the community board.
+      </p>
+      <a href="{{ url_for('pages.analyze') }}" class="btn btn-primary">
+        Analyze a job ad
+      </a>
+    </div>
+
+    <!-- Empty State (Filtered search returns 0) -->
+    <div id="community-empty-filter" class="card" style="display: none; text-align: center; padding: 3rem 1.5rem; margin-bottom: 2rem;">
+      <h3 style="margin-bottom: 0.5rem; font-size: 1.1875rem;">No matching reports</h3>
+      <p class="text-muted" style="max-width: 420px; margin: 0 auto 1.5rem;">
+        No postings match your current filter or search criteria.
+      </p>
+      <button type="button" id="reset-filters-btn" class="btn btn-secondary">
+        Reset filters
+      </button>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div id="community-pagination" class="pagination-wrapper" style="display: none;">
+      <button type="button" id="prev-page-btn" class="btn btn-secondary btn-sm" disabled>
+        ← Previous
+      </button>
+      <span id="page-indicator" class="caption text-muted" style="font-weight: 600;">
+        Page 1 of 1
+      </span>
+      <button type="button" id="next-page-btn" class="btn btn-secondary btn-sm" disabled>
+        Next →
+      </button>
+    </div>
+
   </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/community.js') }}"></script>
 {% endblock %}

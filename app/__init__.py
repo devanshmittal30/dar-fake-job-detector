@@ -16,7 +16,7 @@ Following docs/03_TECHNICAL_DESIGN.md (sections 1, 6, 7, 8, 9) and roadmap promp
 """
 
 from pathlib import Path
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, redirect, render_template, request, url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_login import LoginManager
@@ -57,6 +57,12 @@ def create_app(config_class: type = Config) -> Flask:
     login_manager.login_view = "pages.auth"
     login_manager.login_message = "Please log in to continue."
     login_manager.login_message_category = "info"
+
+    @login_manager.unauthorized_handler
+    def handle_unauthorized():
+        if request.path.startswith("/api/") or request.is_json:
+            return jsonify({"error": "Login required"}), 401
+        return redirect(url_for(login_manager.login_view, next=request.path))
 
     @login_manager.user_loader
     def load_user(user_id: str) -> User | None:

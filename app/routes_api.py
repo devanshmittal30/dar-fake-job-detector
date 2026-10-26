@@ -6,11 +6,14 @@ Implements endpoints specified in docs/03_TECHNICAL_DESIGN.md (section 7 & 9):
 - POST /api/fetch: SSRF-safe URL content fetcher
 """
 
+from datetime import datetime, timezone
 from flask import Blueprint, jsonify, request
+from flask_login import current_user
+from sqlalchemy import case, func
 
 from app.fetcher import FetchError, safe_fetch_job_text
 from app.matcher import find_matching_ad, index_ad
-from app.models import Ad, db
+from app.models import Ad, Rating, User, Vote, db, utc_now
 from app.ocr import OCRError, extract_text_from_image
 from app.predictor import predict
 
@@ -157,3 +160,319 @@ def ocr_job_image():
         return jsonify({"error": err_str}), 400
     except Exception as e:
         return jsonify({"error": f"Image processing failed: {str(e)}"}), 500
+
+
+def format_time_ago(dt: datetime | None) -> str:
+    """Return friendly human-readable time elapsed string."""
+    if not dt:
+        return "recently"
+    now = datetime.now(timezone.utc)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    diff = now - dt
+    seconds = int(diff.total_seconds())
+    if seconds < 60:
+        return "just now"
+    minutes = seconds // 60
+    if minutes < 60:
+        return f"{minutes}m ago"
+    hours = minutes // 60
+    if hours < 24:
+        return f"{hours}h ago"
+    days = hours // 24
+    if days == 1:
+        return "yesterday"
+    if days < 30:
+        return f"{days}d ago"
+    months = days // 30
+    if months < 12:
+        return f"{months}mo ago"
+    years = months // 12
+    return f"{years}y ago"
+
+
+def check_disagreement(ai_label: str, fake_votes: int, genuine_votes: int) -> bool:
+    """Check if AI verdict and community vote majority disagree (requires >= 3 votes).
+    
+    Following docs/01_PRD.md section 6.1:
+    - If total votes >= 3 and AI verdict differs from majority, show amber disagreement note.
+    """
+    total = fake_votes + genuine_votes
+    if total < 3:
+        return False
+    if fake_votes > genuine_votes:
+        return ai_label in ("Likely Real", "Real")
+    elif genuine_votes > fake_votes:
+        return ai_label in ("Likely Fake", "Fake")
+    return False
+
+
+@bp_api.route("/ads/<ad_id>", methods=["GET"])
+def get_ad_details(ad_id: str):
+    """Retrieve ad details, AI verdict, and community vote counts.
+    
+    Response format (docs/03_TECHNICAL_DESIGN.md section 7):
+        {"ad_id", "snippet", "ai_label", "ai_probability", "fake_votes", "genuine_votes", "my_vote"}
+    """
+    ad = db.session.get(Ad, ad_id)
+    if not ad:
+        return jsonify({"error": "Ad not found"}), 404
+
+    fake_votes = Vote.query.filter_by(ad_id=ad.ad_id, vote="fake").count()
+    genuine_votes = Vote.query.filter_by(ad_id=ad.ad_id, vote="genuine").count()
+    total_votes = fake_votes + genuine_votes
+
+    my_vote = None
+    if current_user.is_authenticated:
+        user_vote = Vote.query.filter_by(ad_id=ad.ad_id, user_id=current_user.id).first()
+        if user_vote:
+            my_vote = user_vote.vote
+
+    disagreement = check_disagreement(ad.ai_label, fake_votes, genuine_votes)
+    fake_percent = round((fake_votes / total_votes) * 100, 1) if total_votes > 0 else 0
+    genuine_percent = round((genuine_votes / total_votes) * 100, 1) if total_votes > 0 else 0
+
+    return jsonify({
+        "ad_id": ad.ad_id,
+        "snippet": ad.snippet,
+        "ai_label": ad.ai_label,
+        "ai_probability": ad.ai_probability,
+        "fake_votes": fake_votes,
+        "genuine_votes": genuine_votes,
+        "total_votes": total_votes,
+        "fake_percent": fake_percent,
+        "genuine_percent": genuine_percent,
+        "my_vote": my_vote,
+        "disagreement": disagreement,
+        "disagreement_message": (
+            "The AI and the community disagree. Verify the company on its official website."
+            if disagreement else None
+        )
+    }), 200
+
+
+@bp_api.route("/ads/<ad_id>/vote", methods=["POST"])
+def vote_ad(ad_id: str):
+    """Submit or change community authenticity vote for an ad (login required).
+    
+    Request JSON:
+        {"vote": "fake" | "genuine"}
+    """
+    if not current_user.is_authenticated:
+        return jsonify({"error": "Login required"}), 401
+
+    ad = db.session.get(Ad, ad_id)
+    if not ad:
+        return jsonify({"error": "Ad not found"}), 404
+
+    data = request.get_json(silent=True)
+    if data is None or not isinstance(data, dict):
+        return jsonify({"error": "Invalid request. JSON body expected."}), 400
+
+    vote = data.get("vote")
+    if vote not in ("fake", "genuine"):
+        return jsonify({"error": "Invalid vote value. Must be 'fake' or 'genuine'."}), 400
+
+    # One vote per account per ad; changeable
+    existing_vote = Vote.query.filter_by(user_id=current_user.id, ad_id=ad.ad_id).first()
+    if existing_vote:
+        existing_vote.vote = vote
+        existing_vote.updated_at = utc_now()
+    else:
+        new_vote = Vote(user_id=current_user.id, ad_id=ad.ad_id, vote=vote)
+        db.session.add(new_vote)
+
+    db.session.commit()
+
+    fake_votes = Vote.query.filter_by(ad_id=ad.ad_id, vote="fake").count()
+    genuine_votes = Vote.query.filter_by(ad_id=ad.ad_id, vote="genuine").count()
+    total_votes = fake_votes + genuine_votes
+
+    disagreement = check_disagreement(ad.ai_label, fake_votes, genuine_votes)
+    fake_percent = round((fake_votes / total_votes) * 100, 1) if total_votes > 0 else 0
+    genuine_percent = round((genuine_votes / total_votes) * 100, 1) if total_votes > 0 else 0
+
+    return jsonify({
+        "ok": True,
+        "ad_id": ad.ad_id,
+        "fake_votes": fake_votes,
+        "genuine_votes": genuine_votes,
+        "total_votes": total_votes,
+        "fake_percent": fake_percent,
+        "genuine_percent": genuine_percent,
+        "my_vote": vote,
+        "disagreement": disagreement,
+        "disagreement_message": (
+            "The AI and the community disagree. Verify the company on its official website."
+            if disagreement else None
+        )
+    }), 200
+
+
+@bp_api.route("/ads/<ad_id>/rating", methods=["POST"])
+def rate_ad(ad_id: str):
+    """Submit a star rating (1 to 5) and optional comment up to 200 chars (login required).
+    
+    Request JSON:
+        {"stars": 1-5, "comment": "optional, max 200"}
+    """
+    if not current_user.is_authenticated:
+        return jsonify({"error": "Login required"}), 401
+
+    ad = db.session.get(Ad, ad_id)
+    if not ad:
+        return jsonify({"error": "Ad not found"}), 404
+
+    data = request.get_json(silent=True)
+    if data is None or not isinstance(data, dict):
+        return jsonify({"error": "Invalid request. JSON body expected."}), 400
+
+    raw_stars = data.get("stars")
+    try:
+        stars = int(raw_stars)
+    except (TypeError, ValueError):
+        return jsonify({"error": "Stars must be an integer between 1 and 5."}), 400
+
+    if stars < 1 or stars > 5:
+        return jsonify({"error": "Stars must be between 1 and 5."}), 400
+
+    comment = data.get("comment")
+    if comment is not None:
+        comment = str(comment).strip()
+        if len(comment) > 200:
+            return jsonify({"error": "Comment must be 200 characters or fewer."}), 400
+        if not comment:
+            comment = None
+
+    existing_rating = Rating.query.filter_by(user_id=current_user.id, ad_id=ad.ad_id).first()
+    if existing_rating:
+        existing_rating.stars = stars
+        existing_rating.comment = comment
+        existing_rating.approved = False
+    else:
+        new_rating = Rating(
+            user_id=current_user.id,
+            ad_id=ad.ad_id,
+            stars=stars,
+            comment=comment,
+            approved=False
+        )
+        db.session.add(new_rating)
+
+    db.session.commit()
+    return jsonify({
+        "ok": True,
+        "message": "Thank you. Comments are reviewed before they appear on our home page."
+    }), 200
+
+
+@bp_api.route("/community", methods=["GET"])
+def get_community():
+    """List analyzed job ads with community verification stats, search, and filters.
+    
+    Query params:
+        filter: "all" | "fake" | "genuine" | "disputed" (default "all")
+        q: search keyword
+        sort: "newest" | "votes" (default "newest")
+        page: page number (default 1)
+        
+    Disputed rule (01_PRD.md F14):
+        both sides have at least 3 votes and the smaller side at least 30%.
+    """
+    filter_type = request.args.get("filter", "all").strip().lower()
+    search_q = request.args.get("q", "").strip()
+    sort_type = request.args.get("sort", "newest").strip().lower()
+
+    try:
+        page = max(1, int(request.args.get("page", 1)))
+    except (ValueError, TypeError):
+        page = 1
+    per_page = 12
+
+    # Aggregate votes by ad_id using a subquery
+    vote_sub = db.session.query(
+        Vote.ad_id,
+        func.coalesce(func.sum(case((Vote.vote == "fake", 1), else_=0)), 0).label("fake_votes"),
+        func.coalesce(func.sum(case((Vote.vote == "genuine", 1), else_=0)), 0).label("genuine_votes")
+    ).group_by(Vote.ad_id).subquery()
+
+    fake_col = func.coalesce(vote_sub.c.fake_votes, 0)
+    genuine_col = func.coalesce(vote_sub.c.genuine_votes, 0)
+    total_col = fake_col + genuine_col
+
+    query = db.session.query(
+        Ad,
+        fake_col.label("fake_count"),
+        genuine_col.label("genuine_count")
+    ).outerjoin(vote_sub, Ad.ad_id == vote_sub.c.ad_id)
+
+    # Search keyword
+    if search_q:
+        query = query.filter(
+            (Ad.snippet.ilike(f"%{search_q}%")) | (Ad.full_text.ilike(f"%{search_q}%"))
+        )
+
+    # Filter chips
+    if filter_type == "fake":
+        query = query.filter(fake_col > genuine_col)
+    elif filter_type == "genuine":
+        query = query.filter(genuine_col > fake_col)
+    elif filter_type == "disputed":
+        # Disputed: both sides >= 3 and min(fake, genuine) / total >= 30%
+        # Equivalent to integer logic: fake >= 3 AND genuine >= 3 AND 7*fake >= 3*genuine AND 7*genuine >= 3*fake
+        query = query.filter(
+            fake_col >= 3,
+            genuine_col >= 3,
+            7 * fake_col >= 3 * genuine_col,
+            7 * genuine_col >= 3 * fake_col
+        )
+
+    # Sort
+    if sort_type == "votes":
+        query = query.order_by(total_col.desc(), Ad.first_checked_at.desc())
+    else:
+        query = query.order_by(Ad.first_checked_at.desc())
+
+    total_items = query.count()
+    total_pages = max(1, (total_items + per_page - 1) // per_page)
+    if page > total_pages and total_items > 0:
+        page = total_pages
+
+    records = query.offset((page - 1) * per_page).limit(per_page).all()
+
+    items = []
+    for ad, fake_count, genuine_count in records:
+        f_count = int(fake_count or 0)
+        g_count = int(genuine_count or 0)
+        t_count = f_count + g_count
+        f_pct = round((f_count / t_count) * 100, 1) if t_count > 0 else 0
+        g_pct = round((g_count / t_count) * 100, 1) if t_count > 0 else 0
+        disputed = (
+            f_count >= 3
+            and g_count >= 3
+            and 7 * f_count >= 3 * g_count
+            and 7 * g_count >= 3 * f_count
+        )
+
+        items.append({
+            "ad_id": ad.ad_id,
+            "snippet": ad.snippet[:120] if ad.snippet else ad.full_text[:120],
+            "ai_label": ad.ai_label,
+            "ai_probability": round(ad.ai_probability * 100, 1),
+            "fake_votes": f_count,
+            "genuine_votes": g_count,
+            "total_votes": t_count,
+            "fake_percent": f_pct,
+            "genuine_percent": g_pct,
+            "is_disputed": disputed,
+            "first_checked_at": ad.first_checked_at.isoformat() if ad.first_checked_at else None,
+            "time_ago": format_time_ago(ad.first_checked_at)
+        })
+
+    return jsonify({
+        "items": items,
+        "page": page,
+        "pages": total_pages,
+        "total": total_items
+    }), 200
+
