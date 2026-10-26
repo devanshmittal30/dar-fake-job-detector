@@ -36,11 +36,13 @@ def _normalize_database_url(raw_url: str | None, default_url: str) -> str:
     # Strip outer quotes
     if (url.startswith('"') and url.endswith('"')) or (url.startswith("'") and url.endswith("'")):
         url = url[1:-1].strip()
-    # Handle postgres:// vs postgresql:// protocol in Render/Heroku URLs
+    # Convert postgres:// or postgresql:// to postgresql+psycopg2:// so SQLAlchemy 2 uses psycopg2-binary
     if url.startswith("postgres://"):
-        url = "postgresql://" + url[len("postgres://"):]
+        url = "postgresql+psycopg2://" + url[len("postgres://"):]
+    elif url.startswith("postgresql://") and not url.startswith("postgresql+"):
+        url = "postgresql+psycopg2://" + url[len("postgresql://"):]
     # Must be postgresql or sqlite scheme
-    if not (url.startswith("postgresql://") or url.startswith("sqlite:///")):
+    if not (url.startswith("postgresql") or url.startswith("sqlite:///")):
         return default_url
     try:
         make_url(url)
